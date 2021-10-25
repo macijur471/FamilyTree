@@ -1,30 +1,53 @@
 
 # Table of Contents
 
-1.  [Family Tree IO Project](#orgd16918a)
-    1.  [Technologies](#org3354296)
-        1.  [Frontend](#orgcb9818d)
-        2.  [Backend in Rust](#orgb4915c4)
-        3.  [Database](#org892ded0)
-        4.  [Infrastructure](#org2c9e6e5)
-        5.  [Testing](#org81ee0a9)
-    2.  [Features](#org4a6412d)
+1.  [Family Tree IO Project](#org16a1818)
+    1.  [usage](#orgb8c1402)
+    2.  [Technologies](#org2a32c81)
+    3.  [TODO](#orgaccf7b9)
 
 
 
-<a id="orgd16918a"></a>
+<a id="org16a1818"></a>
 
 # Family Tree IO Project
 
 A feature-rich web application that <del>is</del> will be designed for creating family trees. <del>User-friendly ui design with many functionalities</del>.
 
 
-<a id="org3354296"></a>
+<a id="orgb8c1402"></a>
+
+## usage
+
+Below is an instruction how to set up an environment for local development. I case you do not have docker installed on your machine - check [docker](<https://www.docker.com/>).
+
+**You have to be in a root directory of the project, in order for the context to be correct.**
+
+Build provided images and start services with one command
+
+    docker-compose up -d --build
+
+Assuming the builds haven&rsquo;t failed, check whether neccessary containers/services are already up, it may take some time.
+
+    docker-compose ps
+
+
+### troubleshooting
+
+-   Custom images had been built successfully however `docker-compose up -d --build` failed
+    -   Ensure that ports used in the project are not already allocated
+    -   Ensure being in the correct directory
+-   Building an image has failed
+    -   Create a ticket on clickup with an explanation of the situation (maybe error trace) and assign it to the image contibutor. Alternatively you can directly contact that person
+-   A container keeps restarting
+    -   Check logs of the pod with `docker logs <name-of-the-container>`
+    -   Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
+
+
+<a id="org2a32c81"></a>
 
 ## Technologies
 
-
-<a id="orgcb9818d"></a>
 
 ### Frontend
 
@@ -37,29 +60,23 @@ A feature-rich web application that <del>is</del> will be designed for creating 
     -   axios
 
 
-<a id="orgb4915c4"></a>
+### Backend
 
-### Backend in Rust
-
+-   Rust
 -   Actix-web
 
 
-<a id="org892ded0"></a>
-
 ### Database
 
--   Mongodb
+-   Postgresql
 
-
-<a id="org2c9e6e5"></a>
 
 ### Infrastructure
 
 -   Docker
 -   k8s
+-   helm
 
-
-<a id="org81ee0a9"></a>
 
 ### Testing
 
@@ -72,10 +89,14 @@ A feature-rich web application that <del>is</del> will be designed for creating 
     -   cypress
 
 
-<a id="org4a6412d"></a>
+<a id="orgaccf7b9"></a>
 
-## TODO Features
+## TODO
 
+-   <del>set up travis ci</del>
+-   <del>create basic front setup</del>
+-   <del>create basic actix setup</del>
+-   <del>create docker-compose for easier local development - temporary solution</del>
 -   visualization
 -   dragging elements
 -   multimedia attachments (mostly images)
@@ -86,4 +107,5 @@ A feature-rich web application that <del>is</del> will be designed for creating 
 -   read/write the tree from/to json
 -   multitenant architecture
 -   persistent trees, with the help of a database
+-   user authentication service
 
