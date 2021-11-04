@@ -1,31 +1,42 @@
 
 # Table of Contents
 
-1.  [Family Tree IO Project](#org16a1818)
-    1.  [usage](#orgb8c1402)
-    2.  [Technologies](#org2a32c81)
-    3.  [TODO](#orgaccf7b9)
+1.  [Family Tree IO Project](#org751bb1f)
+    1.  [usage](#org1c67736)
+    2.  [Technologies](#org4e7340f)
+    3.  [TODO](#org653ac28)
 
 
 
-<a id="org16a1818"></a>
+<a id="org751bb1f"></a>
 
 # Family Tree IO Project
 
 A feature-rich web application that <del>is</del> will be designed for creating family trees. <del>User-friendly ui design with many functionalities</del>.
 
 
-<a id="orgb8c1402"></a>
+<a id="org1c67736"></a>
 
 ## usage
 
 Below is an instruction how to set up an environment for local development. I case you do not have docker installed on your machine - check [docker](<https://www.docker.com/>).
 
+Rust Dockerfiles use docker buildkit, so it has to be set as env variable \`DOCKER<sub>BUILDKIT</sub>\`
+
+    export DOCKER_BUILDKIT=1
+
 **You have to be in a root directory of the project, in order for the context to be correct.**
 
-Build provided images and start services with one command
+Build provided images and start services with one command.
+Choose one of the following commands depending on the needed environment.
 
-    docker-compose up -d --build
+-   Dev 
+    
+        docker-compose up -d --build
+-   Prod
+    
+        export IMAGE_REG=<registry>
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
 
 Assuming the builds haven&rsquo;t failed, check whether neccessary containers/services are already up, it may take some time.
 
@@ -44,7 +55,7 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
 
 
-<a id="org2a32c81"></a>
+<a id="org4e7340f"></a>
 
 ## Technologies
 
@@ -89,7 +100,7 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   cypress
 
 
-<a id="orgaccf7b9"></a>
+<a id="org653ac28"></a>
 
 ## TODO
 

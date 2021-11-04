@@ -1,0 +1,21 @@
+FROM node:14.17-alpine as builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy app config files
+COPY tsconfig.json ./
+
+# Copy app sources
+COPY src src/
+COPY public public/
+
+RUN npm run-script build
+
+# runner stage
+FROM nginx:1.21.3-alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html

@@ -7,12 +7,24 @@ A feature-rich web application that +is+ will be designed for creating family tr
 ** usage
 Below is an instruction how to set up an environment for local development. I case you do not have docker installed on your machine - check [docker](https://www.docker.com/).
 
+Rust Dockerfiles use docker buildkit, so it has to be set as env variable `DOCKER_BUILDKIT`
+#+BEGIN_EXAMPLE
+export DOCKER_BUILDKIT=1
+#+END_EXAMPLE
+
 *You have to be in a root directory of the project, in order for the context to be correct.*
 
-Build provided images and start services with one command
-#+BEGIN_EXAMPLE
-docker-compose up -d --build
-#+END_EXAMPLE
+Build provided images and start services with one command.
+Choose one of the following commands depending on the needed environment.
++ Dev 
+    #+BEGIN_EXAMPLE
+    docker-compose up -d --build
+    #+END_EXAMPLE
++ Prod
+    #+BEGIN_EXAMPLE
+    export IMAGE_REG=<registry>
+    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
+    #+END_EXAMPLE
 
 Assuming the builds haven't failed, check whether neccessary containers/services are already up, it may take some time.
 #+BEGIN_EXAMPLE
