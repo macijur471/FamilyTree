@@ -17,8 +17,10 @@ COPY tsconfig.json ./
 COPY src src/
 COPY public public/
 
-RUN npm build
+RUN npm install -g serve
+
+RUN npm run build
 
 EXPOSE ${PORT_FRONTEND}
 
-CMD ["npm", "start"]
+CMD [ "serve", "-p", "3000", "-s", "build" ]

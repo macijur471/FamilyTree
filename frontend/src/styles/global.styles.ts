@@ -18,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
         --yellow: #FDFCDC;
         --white: #FFFFFF;
 
-        --nav-height: 178px;
+        --header-height: 178px;
     }
 
     *, *::after, *::before {

@@ -8,4 +8,5 @@ export const AppWrapper = styled.div`
   ${columnDiv}
 
   background-color: ${({ theme }) => theme.colors.bg};
+  overflow: hidden;
 `;

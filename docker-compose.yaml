@@ -32,4 +32,10 @@ services:
   frontend:
     build:
       context: ./frontend
+    environment:
+      CHOKIDAR_USEPOLLING: 1 #that's for live code changes
+      CHOKIDAR_POLLINTERVAL: 3000 #and this
+      PORT_FRONTEND: 3000
+    volumes:
+      - "./frontend/src:/usr/app/src:cached" #and this
     restart: always
