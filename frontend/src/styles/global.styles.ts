@@ -12,9 +12,12 @@ export const GlobalStyles = createGlobalStyle`
         --dark-turqoise: #0081A7;
         --turqoise: #00AFB9;
         --lime: #BBEC94;
+        --dark-lime: #9DD174;
+        --v-dark-red: #E15348;
         --dark-red: #F07167;
         --red: #FF928B;
         --orange: #FED9B7;
+        --dark-orange: #EDC8A6;
         --yellow: #FDFCDC;
         --white: #FFFFFF;
 

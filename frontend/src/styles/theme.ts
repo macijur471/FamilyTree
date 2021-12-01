@@ -54,6 +54,45 @@ const theme = {
         default: "var(--med-blue)",
       },
     },
+    personTile: {
+      bg: {
+        male: "var(--turqoise)",
+        female: "var(--red)",
+        add: "var(--light-blue)",
+      },
+      hoverBg: {
+        male: "var(--dark-turqoise)",
+        female: "var(--dark-red)",
+        add: "var(--med-blue)",
+      },
+      subtreeBg: "var(--yellow)",
+    },
+    iconButton: {
+      disabledBg: "#C4C4C4",
+      disabledFill: "var(--dark-blue)",
+      theme: {
+        green: {
+          bg: "var(--lime)",
+          hoveredBg: "var(--dark-lime)",
+          fill: "var(--dark-blue)",
+        },
+        red: {
+          bg: "var(--dark-red)",
+          hoveredBg: "var(--v-dark-red)",
+          fill: "var(--orange)",
+        },
+        blue: {
+          bg: "var(--light-blue)",
+          hoveredBg: "var(--med-blue)",
+          fill: "var(--orange)",
+        },
+        orange: {
+          bg: "var(--orange)",
+          hoveredBg: "var(--dark-orange)",
+          fill: "var(--dark-blue)",
+        },
+      },
+    },
   },
   heights: {
     header: "var(--header-height)",

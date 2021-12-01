@@ -6,6 +6,7 @@ import { useUserContext } from "context/UserContext/useUserContext";
 
 const Main: FunctionComponent = () => {
   const { isPending, isLoggedIn } = useUserContext();
+
   return (
     <MainWrapper>
       {isPending && <Loader />}

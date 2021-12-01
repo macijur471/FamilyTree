@@ -9,4 +9,6 @@ export const MainWrapper = styled.main`
 
   ${columnDiv}
   justify-content: center;
+
+  overflow: auto;
 `;
