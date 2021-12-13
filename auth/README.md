@@ -33,7 +33,7 @@ Returns:
 bool
 ```
 
-### Dependencies
+## Dependencies
 Before launching diesel cli must be installed:
 ```
 cargo install diesel_cli --no-default-features --features postgres
