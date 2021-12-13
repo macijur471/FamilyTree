@@ -6,6 +6,7 @@ use crate::Pool;
 use crate::diesel::{QueryDsl,RunQueryDsl,ExpressionMethods,OptionalExtension};
 use actix_web::web;
 use diesel::dsl::insert_into;
+use crate::VALUES;
 
 
 fn get_user_by_username(db: &web::Data<Pool>, name: String) -> Result<Option<User>, diesel::result::Error> {
@@ -52,8 +53,7 @@ pub fn login(db: web::Data<Pool>, user: web::Json<NewUser>) -> Result<LoginRespo
     match is_taken {
         Some(x) => {
             if x.password == user.password {
-                let _var = std::env::var("SECRET_KEY").unwrap().to_string();
-                let key = _var.as_bytes();
+                let key = VALUES.key.as_bytes();
                 let date = Utc::now() + Duration::hours(1);
 
                 let my_claims = Claims {
@@ -84,8 +84,7 @@ pub fn login(db: web::Data<Pool>, user: web::Json<NewUser>) -> Result<LoginRespo
     }
 }
 pub fn auth_function(token: &str) -> Result<bool, Response> {
-    let _var = std::env::var("SECRET_KEY").unwrap().to_string();
-    let key = _var.as_bytes();
+    let key = VALUES.key.as_bytes();
     let _decode = decode::<Claims>(
         token,
         &DecodingKey::from_secret(key),
