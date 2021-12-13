@@ -5,9 +5,12 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: changeme
+      TREE_POSTGRES_PASSWORD: changeme
+      AUTH_POSTGRES_PASSWORD: changeme
+
       PG_DATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ${PWD}/fam_tree_rest_api/docker-inits/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ${PWD}/docker-inits/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - /opt/pgdata:/var/lib/postgresql/data
   migrator:
     build:
@@ -17,6 +20,19 @@ services:
       PG_MIGRATIONS_DIR: /migrations
     depends_on:
       - postgres
+
+  auth_migrator:
+    build:
+      context: ./auth
+      target: auth_migrator
+      args:
+        PG_AUTH_USERNAME: auther
+        PG_AUTH_PASSWORD: changeme
+        PG_HOST: postgres
+        PG_AUTH_DB: auth
+    depends_on:
+      - postgres
+
   api:
     build:
       context: ./fam_tree_rest_api
@@ -29,6 +45,23 @@ services:
     restart: always
     ports:
       - 5000:5000
+
+  auth_api:
+    build:
+      context: ./auth
+      target: auth_api
+      args:
+        PG_AUTH_USERNAME: auther
+        PG_AUTH_PASSWORD: changeme
+        PG_HOST: postgres
+        PG_AUTH_DB: auth
+    depends_on:
+      - postgres
+      - auth_migrator
+    restart: always
+    ports:
+      - 8080:8080
+
   frontend:
     ports:
       - 3000:3000
