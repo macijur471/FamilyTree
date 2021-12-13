@@ -1,6 +1,6 @@
 use super::models::{LoginResponse, Response, Claims, NewUser, User};
 use chrono::{Duration, Utc};
-use jsonwebtoken::{encode, EncodingKey, Header};
+use jsonwebtoken::{Algorithm, decode, DecodingKey, encode, EncodingKey, Header, Validation};
 use super::schema::users::dsl::*;
 use crate::Pool;
 use crate::diesel::{QueryDsl,RunQueryDsl,ExpressionMethods,OptionalExtension};
@@ -83,6 +83,22 @@ pub fn login(db: web::Data<Pool>, user: web::Json<NewUser>) -> Result<LoginRespo
         }),
     }
 }
-pub fn auth_function() -> bool {
-    true
-}
+pub fn auth_function(token: &str) -> Result<bool, Response> {
+    let _var = std::env::var("SECRET_KEY").unwrap().to_string();
+    let key = _var.as_bytes();
+    let _decode = decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(key),
+        &Validation::new(Algorithm::HS256),
+    );
+    return match _decode {
+        Ok(_) => {
+            Ok(true)
+        },
+        Err(_) => Err(Response {
+            status: false,
+            message: "Invalid Token".to_string(),
+        })
+    }
+    }
+

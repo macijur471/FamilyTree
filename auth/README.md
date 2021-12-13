@@ -26,11 +26,19 @@ Returns:
 ```
 ### [POST user/authenticate]
 ```
-curl -X GET -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" -v 127.0.0.1:8080/users
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer TOKEN' -i 'http://127.0.0.1:8080/user/authenticate'
+
 ```
 Returns: 
 ```
 bool
+```
+or 
+```
+{
+    "status": bool
+    "message": String
+}
 ```
 
 ## Dependencies
@@ -38,7 +46,7 @@ Before launching diesel cli must be installed:
 ```
 cargo install diesel_cli --no-default-features --features postgres
 ```
-and to create users database:
+and to create users table in database:
 ```
 diesel migration run
 ```
