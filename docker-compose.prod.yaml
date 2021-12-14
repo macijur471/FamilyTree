@@ -1,11 +1,7 @@
 version: "3.8"
 services:
   frontend:
-    build:
-      dockerfile: Dockerfile.prod
     image: ${IMAGE_REG}-frontend:1.0.0
-    ports:
-      - 3000:80
 
   api:
     image: ${IMAGE_REG}-tree_api:1.0.0

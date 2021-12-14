@@ -13,9 +13,6 @@ services:
       - ${PWD}/docker-inits/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - /opt/pgdata:/var/lib/postgresql/data
   migrator:
-    build:
-      context: ./fam_tree_rest_api
-      target: migrator
     environment:
       PG_MIGRATIONS_DIR: /migrations
     depends_on:
@@ -36,9 +33,6 @@ services:
       - postgres
 
   api:
-    build:
-      context: ./fam_tree_rest_api
-      target: tree_api
     environment:
       API_PORT: 5000
     depends_on:
@@ -69,14 +63,6 @@ services:
   frontend:
     ports:
       - 3000:3000
-    command: sh -c "npm install && npm start" #that's for live code changes
-    build:
-      context: ./frontend
     environment:
-      CHOKIDAR_USEPOLLING: 1 #and this
-      CHOKIDAR_POLLINTERVAL: 3000 #and this
       PORT_FRONTEND: 3000
-    working_dir: /usr/app #and this
-    volumes:
-      - "./frontend/src:/usr/app/src:cached" #and this
     restart: always
