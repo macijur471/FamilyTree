@@ -30,6 +30,8 @@ services:
         PG_AUTH_PASSWORD: changeme
         PG_HOST: postgres
         PG_AUTH_DB: auth
+    environment:
+      SECRET_KEY: changeme
     depends_on:
       - postgres
 
@@ -55,6 +57,8 @@ services:
         PG_AUTH_PASSWORD: changeme
         PG_HOST: postgres
         PG_AUTH_DB: auth
+    environment:
+      SECRET_KEY: changeme
     depends_on:
       - postgres
       - auth_migrator
