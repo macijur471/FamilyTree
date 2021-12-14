@@ -60,16 +60,12 @@ impl<'r> Database<'r> {
             .await
             .unwrap();
 
-        let row = sqlx::query(
+        sqlx::query(
             r#"
             SELECT 1"#,
         )
         .fetch_one(&pool)
-        .await;
-
-        match row {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        .await
+        .is_ok()
     }
 }

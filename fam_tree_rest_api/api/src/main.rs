@@ -1,4 +1,4 @@
-use actix_web::{middleware::Logger, web, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 use std::sync::{Arc, Mutex};
 // use api::dal::Database;
 use api::{controller, dal::Database, AppState};
@@ -18,12 +18,17 @@ async fn main() -> std::io::Result<()> {
 
     let app = HttpServer::new(move || {
         App::new()
-            .wrap(Logger::default())
+            .wrap(middleware::DefaultHeaders::new().header("Content-Type", "application/json"))
+            .wrap(middleware::Logger::default())
             .app_data(app_state.clone())
-            .configure(controller::init_individuals_controller)
-            .configure(controller::init_relationships_controller)
-            .configure(controller::init_families_controller)
-            .configure(controller::init_health_controller)
+            .service(
+                web::scope("/api/v1")
+                    .configure(controller::init_individuals_controller)
+                    .configure(controller::init_relationships_controller)
+                    .configure(controller::init_families_controller)
+                    .configure(controller::init_health_controller),
+            )
+            .default_service(web::route().to(controller::default_route::not_found))
     })
     .bind(config.get_app_url())?;
 

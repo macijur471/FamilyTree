@@ -1,4 +1,4 @@
-use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use serde::Serialize;
 
 use super::AppState;
@@ -7,7 +7,9 @@ use crate::errors::AppError;
 use crate::models::{Individual, Relationship};
 
 pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(create_relationship).service(get_family_tree);
+    cfg.service(create_relationship)
+        .service(get_family_tree)
+        .service(edit_relationship);
 }
 
 #[derive(Serialize)]
@@ -26,8 +28,7 @@ async fn create_relationship(
         .context
         .relationships
         .create_relationship(&relationship)
-        .await
-        .map_err(AppError::db_err)?;
+        .await?;
 
     let rel_id = RelId { id: query_res };
     Ok(HttpResponse::Created().json(rel_id))
@@ -37,13 +38,28 @@ async fn create_relationship(
 async fn get_family_tree(
     family_id: web::Path<i32>,
     app_state: web::Data<AppState<'_>>,
-) -> Result<impl Responder, AppError> {
+) -> Result<HttpResponse, AppError> {
     let fam_tree = app_state
         .context
         .relationships
         .get_family_as_relationships(family_id.into_inner())
-        .await
-        .map_err(AppError::db_err)?;
+        .await?;
 
     Ok(HttpResponse::Ok().json(fam_tree))
+}
+
+#[put("/relationships")]
+async fn edit_relationship(
+    app_state: web::Data<AppState<'_>>,
+    relationship: web::Json<Relationship>,
+) -> Result<HttpResponse, AppError> {
+    let relationship = relationship.into_inner();
+
+    let query_res = app_state
+        .context
+        .relationships
+        .edit_relationship(&relationship)
+        .await?;
+
+    Ok(HttpResponse::Created().json(query_res))
 }

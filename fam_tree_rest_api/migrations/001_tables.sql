@@ -19,22 +19,11 @@ CREATE TABLE IF NOT EXISTS IndividualToFamilies (
 CREATE TYPE role AS ENUM ('parent', 'child', 'spouse', 'sibling');
 CREATE TYPE reltype AS ENUM ('blood', 'married', 'divorced', 'adopted');
 
--- CREATE TABLE IF NOT EXISTS Relationship_Types (
---     id SERIAL PRIMARY KEY,
---     relationshipship_type_description VARCHAR(60)
--- );
-
--- CREATE TABLE IF NOT EXISTS Roles (
---     id SERIAL PRIMARY KEY,
---     role_description VARCHAR(60)
--- );
-
 CREATE TABLE IF NOT EXISTS Relationships (
     id SERIAL PRIMARY KEY,
-    individual_1_id INT REFERENCES Individuals,
-    individual_2_id INT REFERENCES Individuals,
+    individual_1_id integer REFERENCES Individuals (id) ON DELETE CASCADE,
+    individual_2_id integer REFERENCES Individuals (id) ON DELETE CASCADE,
     relationship_type reltype,
     individual_1_role role,
     individual_2_role role
 );
-

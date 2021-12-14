@@ -1,5 +1,6 @@
 use super::AppState;
 
+pub mod default_route;
 pub mod family_controller;
 pub mod health_controller;
 pub mod individuals_controller;

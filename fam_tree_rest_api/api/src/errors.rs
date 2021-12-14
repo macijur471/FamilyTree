@@ -1,75 +1,67 @@
 use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use serde::Serialize;
 use sqlx::Error as SqlError;
-use std::fmt;
+use thiserror::Error;
 
-#[derive(Debug)]
-pub enum AppErrorType {
-    DbError,
-    NotFoundError,
-}
-
-#[derive(Debug)]
-pub struct AppError {
-    pub msg: Option<String>,
-    pub cause: Option<String>,
-    pub error_type: AppErrorType,
+#[derive(Error, Debug)]
+pub enum AppError {
+    #[error("Requested resource was not found")]
+    NotFound,
+    #[error("You are forbidden to access this resource")]
+    Forbidden,
+    #[error("Service is unavailable")]
+    Unavailabe,
+    #[error("Unknown Internal Error")]
+    Unknown,
 }
 
 impl AppError {
-    pub fn message(&self) -> String {
-        match &*self {
-            AppError { msg: Some(msg), .. } => msg.clone(),
-            AppError {
-                msg: None,
-                error_type: AppErrorType::NotFoundError,
-                ..
-            } => "The requested item was not found".to_string(),
-            _ => "An unexpected error has occured".to_string(),
+    pub fn name(&self) -> String {
+        match self {
+            Self::NotFound => "NotFound".to_string(),
+            Self::Forbidden => "Forbidden".to_string(),
+            Self::Unavailabe => "Unavailable".to_string(),
+            Self::Unknown => "Unknown".to_string(),
+        }
+    }
+}
+
+impl ResponseError for AppError {
+    fn status_code(&self) -> StatusCode {
+        match *self {
+            Self::NotFound => StatusCode::NOT_FOUND,
+            Self::Forbidden => StatusCode::FORBIDDEN,
+            Self::Unavailabe => StatusCode::SERVICE_UNAVAILABLE,
+            Self::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
-    pub fn db_err(error: impl ToString) -> AppError {
-        AppError {
-            msg: None,
-            cause: Some(error.to_string()),
-            error_type: AppErrorType::DbError,
-        }
+    fn error_response(&self) -> HttpResponse {
+        let status_code = self.status_code();
+        let error_response = ErrorResponse {
+            code: status_code.as_u16(),
+            message: self.to_string(),
+            error: self.name(),
+        };
+
+        HttpResponse::build(status_code).json(error_response)
     }
 }
 
 impl From<SqlError> for AppError {
     fn from(error: SqlError) -> AppError {
-        AppError {
-            msg: None,
-            cause: Some(error.to_string()),
-            error_type: AppErrorType::DbError,
+        match error {
+            SqlError::Configuration(_) | SqlError::PoolTimedOut | SqlError::WorkerCrashed => {
+                AppError::Unavailabe
+            }
+            _ => AppError::NotFound,
         }
-    }
-}
-
-impl fmt::Display for AppError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        write!(f, "{:?}", self)
     }
 }
 
 #[derive(Serialize)]
-pub struct AppErrorResponse {
-    pub error: String,
-}
-
-impl ResponseError for AppError {
-    fn status_code(&self) -> StatusCode {
-        match self.error_type {
-            AppErrorType::DbError => StatusCode::INTERNAL_SERVER_ERROR,
-            AppErrorType::NotFoundError => StatusCode::NOT_FOUND,
-        }
-    }
-
-    fn error_response(&self) -> HttpResponse {
-        HttpResponse::build(self.status_code()).json(AppErrorResponse {
-            error: self.message(),
-        })
-    }
+struct ErrorResponse {
+    code: u16,
+    error: String,
+    message: String,
 }

@@ -15,11 +15,11 @@ impl Table<'_, Relationship> {
             INSERT INTO relationships(
                 individual_1_id,
                 individual_2_id,
-                relationshipship_type,
+                relationship_type,
                 individual_1_role,
                 individual_2_role
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING id"#,
         )
         .bind(&relationship.individual_1_id)
@@ -28,7 +28,8 @@ impl Table<'_, Relationship> {
         .bind(&relationship.individual_1_role)
         .bind(&relationship.individual_2_role)
         .fetch_one(&*self.pool)
-        .await?
+        .await
+        .unwrap()
         .try_get(0)
     }
 
@@ -50,8 +51,7 @@ impl Table<'_, Relationship> {
                 SELECT * FROM relationships;"#,
         )
         .fetch_all(&*self.pool)
-        .await
-        .unwrap();
+        .await?;
 
         let ids: Vec<IndId> = sqlx::query_as(
             r#"
@@ -59,11 +59,37 @@ impl Table<'_, Relationship> {
         )
         .bind(family_id)
         .fetch_all(&*self.pool)
-        .await
-        .unwrap();
+        .await?;
 
         let ids = ids.iter().map(|obj| obj.0).collect();
 
         Ok(FamTree::from_rels(&ids, &rels))
+    }
+
+    pub async fn edit_relationship(
+        &self,
+        relationship: &Relationship,
+    ) -> Result<Relationship, sqlx::Error> {
+        let x = sqlx::query_as(
+            r#"
+            INSERT INTO relationships
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (id)
+            DO UPDATE
+            SET individual_1_id = $2, individual_2_id = $3, relationship_type = $4, individual_1_role = $5, individual_2_role = $6
+            RETURNING *
+            "#,
+        )
+        .bind(&relationship.id)
+        .bind(&relationship.individual_1_id)
+        .bind(&relationship.individual_2_id)
+        .bind(&relationship.relationship_type)
+        .bind(&relationship.individual_1_role)
+        .bind(&relationship.individual_2_role)
+        .fetch_one(&*self.pool)
+        .await;
+
+        println!("{:?}", x);
+        x
     }
 }
