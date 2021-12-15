@@ -10,13 +10,14 @@ services:
 
       PG_DATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ${PWD}/docker-inits/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./docker-inits/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - /opt/pgdata:/var/lib/postgresql/data
   migrator:
     environment:
       PG_MIGRATIONS_DIR: /migrations
     depends_on:
       - postgres
+    restart: on-failure
 
   auth_migrator:
     build:
@@ -31,6 +32,7 @@ services:
       SECRET_KEY: changeme
     depends_on:
       - postgres
+    restart: on-failure
 
   api:
     environment:
@@ -39,8 +41,6 @@ services:
       - postgres
       - migrator
     restart: always
-    ports:
-      - 5000:5000
 
   auth_api:
     build:
@@ -57,12 +57,20 @@ services:
       - postgres
       - auth_migrator
     restart: always
-    ports:
-      - 8080:8080
 
   frontend:
     ports:
       - 3000:3000
     environment:
-      PORT_FRONTEND: 3000
+      PORT_FRONTEND: 80
     restart: always
+
+  haproxy:
+    image: haproxy:2.0.26-buster
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+
+

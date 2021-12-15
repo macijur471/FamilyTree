@@ -42,6 +42,20 @@ docker-compose ps
   - Check logs of the pod with ~docker logs <name-of-the-container>~
   - Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
 
+** development
+First of all, in order to access any kind of service it's recommended to request port `80`. Backend apis are not accessible directly outside of the docker vnet. Direct access (via exposed 3000 port) to react frontend service will be probably removed in the nearest future, because using it causes CORS issues.
+
+*** Paths 
++ Frontend - ~http://${host}:${haproxy_port}/~
++ Auth Api - ~http://${host}:${haproxy_port}/api/v1/auth~
++ Genealogy Api - ~http://${host}:${haproxy_port}/api/v1/genealogy~
+
+By default ~host=localhost~ and ~haproxy_port=80~ (if haproxy uses default port, specifying port in http requests is redundant)
+
+Currently paths for specific services are also presented on the diagram below
+[[./media/Paths.drawio.svg]]
+
+
 ** Technologies
 *** Frontend
 + React.js
@@ -81,6 +95,5 @@ docker-compose ps
 + biographical informations
 + a posibility to export the tree to HTML, PDF
 + read/write the tree from/to json
-+ multitenant architecture
-+ persistent trees, with the help of a database
-+ user authentication service
++ +persistent trees, with the help of a database+
++ +user authentication service+

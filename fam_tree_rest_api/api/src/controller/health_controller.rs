@@ -5,7 +5,7 @@ pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(healthy);
 }
 
-#[get("/healthy")]
+#[get("/health")]
 async fn healthy(app_state: web::Data<AppState<'_>>) -> impl Responder {
     let pg_response = app_state.context.health_check().await;
     let res_body = serde_json::json!({ "database_connected": pg_response }).to_string();

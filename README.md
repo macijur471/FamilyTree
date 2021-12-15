@@ -1,21 +1,22 @@
 
 # Table of Contents
 
-1.  [Family Tree IO Project](#org751bb1f)
-    1.  [usage](#org1c67736)
-    2.  [Technologies](#org4e7340f)
-    3.  [TODO](#org653ac28)
+1.  [Family Tree IO Project](#org6bf04f8)
+    1.  [usage](#org24193fa)
+    2.  [development](#orgfd0960b)
+    3.  [Technologies](#org5ba07a2)
+    4.  [TODO](#orgf98aab7)
 
 
 
-<a id="org751bb1f"></a>
+<a id="org6bf04f8"></a>
 
 # Family Tree IO Project
 
 A feature-rich web application that <del>is</del> will be designed for creating family trees. <del>User-friendly ui design with many functionalities</del>.
 
 
-<a id="org1c67736"></a>
+<a id="org24193fa"></a>
 
 ## usage
 
@@ -55,7 +56,26 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
 
 
-<a id="org4e7340f"></a>
+<a id="orgfd0960b"></a>
+
+## development
+
+First of all, in order to access any kind of service it&rsquo;s recommended to request port \`80\`. Backend apis are not accessible directly outside of the docker vnet. Direct access (via exposed 3000 port) to react frontend service will be probably removed in the nearest future, because using it causes CORS issues.
+
+
+### Paths
+
+-   Frontend - `http://${host}:${haproxy_port}/`
+-   Auth Api - `http://${host}:${haproxy_port}/api/v1/auth`
+-   Genealogy Api - `http://${host}:${haproxy_port}/api/v1/genealogy`
+
+By default `host=localhost` and `haproxy_port=80` (if haproxy uses default port, specifying port in http requests is redundant)
+
+Currently paths for specific services are also presented on the diagram below
+![img](./media/Paths.drawio.svg)
+
+
+<a id="org5ba07a2"></a>
 
 ## Technologies
 
@@ -100,7 +120,7 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   cypress
 
 
-<a id="org653ac28"></a>
+<a id="orgf98aab7"></a>
 
 ## TODO
 
@@ -116,7 +136,6 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
 -   biographical informations
 -   a posibility to export the tree to HTML, PDF
 -   read/write the tree from/to json
--   multitenant architecture
--   persistent trees, with the help of a database
--   user authentication service
+-   <del>persistent trees, with the help of a database</del>
+-   <del>user authentication service</del>
 
