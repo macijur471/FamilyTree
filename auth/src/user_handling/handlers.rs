@@ -122,11 +122,14 @@ pub fn auth_function(token: &str) -> Result<bool, Response> {
     }
 }
 
-pub fn check_health(db: web::Data<Pool>) -> Result<bool,bool>{
+pub fn check_health(db: web::Data<Pool>) -> Result<(), Response>{
     let conn = db.get().unwrap();
     let conn_check = users.load::<User>(&conn).is_ok();
     match conn_check{
-        true => Ok(true),
-        false => Err(false)
+        true => Ok(()),
+        false => Err(Response {
+            status: false,
+            message: "No connection to database".to_string()
+        })
     }
 }

@@ -28,7 +28,7 @@ async fn authenticate(_req: HttpRequest) -> HttpResponse {
     let _split: Vec<&str> = _auth.unwrap().to_str().unwrap().split("Bearer").collect();
     let token = _split[1].trim();
     match handlers::auth_function(token) {
-        Ok(result) => HttpResponse::Ok().json(result),
+        Ok(_) => HttpResponse::Ok().finish(),
         Err(err) => HttpResponse::Unauthorized().json(err),
     }
 }
@@ -37,7 +37,7 @@ async fn authenticate(_req: HttpRequest) -> HttpResponse {
 async fn health(pool: web::Data<Pool>) -> Result<HttpResponse, Error>{
     Ok(web::block(move || handlers::check_health(pool))
         .await
-        .map(|_| HttpResponse::Ok().json("Connection intact"))
+        .map(|_| HttpResponse::Ok().finish())
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
