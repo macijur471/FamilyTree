@@ -19,8 +19,14 @@ import {
   PASSWD_MAX_LENGTH_MSSG,
   PASSWD_MIN_LENGTH,
   PASSWD_MIN_LENGTH_MSSG,
-} from "utils/userForm.consts";
+} from "utils/formConsts/userForm.consts";
 import PrivacyPolicyCheckbox from "./PrivacyPolicyCheckbox";
+import { LOGIN_URL, REGISTER_URL } from "utils/auth.routes";
+import { useUserContext } from "context/UserContext/useUserContext";
+import { UserFormResponseT } from "utils/types/responses/userFormResponse.type";
+import axios from "axios";
+import { USER_FORM_ERROR_TOASTID } from "utils/toast.ids";
+import { handleErrorMssg } from "utils/functions/handleErrorMssg";
 
 type Inputs = {
   username: string;
@@ -29,7 +35,9 @@ type Inputs = {
 };
 
 const UserForm: FunctionComponent = () => {
-  const [active, setIsActive] = useState(0);
+  const [active, setIsActive] = useState(0); // 0 - login form, 1 - register form
+
+  const { changeUserContextValue } = useUserContext();
 
   const {
     register,
@@ -39,8 +47,27 @@ const UserForm: FunctionComponent = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
-    //TODO login/register query
+    try {
+      const res = await axios.post<UserFormResponseT>(
+        active === 0 ? LOGIN_URL : REGISTER_URL,
+        {
+          username: data.username,
+          password: data.password,
+        }
+      );
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer: ${res.data.token}`;
+
+      changeUserContextValue({
+        username: data.username,
+        isLoggedIn: res.data.status,
+      });
+    } catch (e) {
+      if (!(e instanceof Error)) return;
+      handleErrorMssg(e, USER_FORM_ERROR_TOASTID);
+    }
   };
 
   const changeForm = useCallback(

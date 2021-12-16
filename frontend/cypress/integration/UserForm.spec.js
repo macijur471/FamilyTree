@@ -2,7 +2,7 @@ const { allFormInputErrors } = require("../tools/allFormInputErrors");
 
 describe("Main page (when not logged in)", () => {
   before(() => {
-    cy.visit("/").wait(2500);
+    cy.visit("/");
   });
 
   it("has header element", () => {
@@ -78,7 +78,7 @@ describe("Main page (when not logged in)", () => {
       });
     });
 
-    it("highlites the privacy policy checkbox if it wasn't active when form submitted", () => {
+    it("highlights the privacy policy checkbox if it wasn't active when form submitted", () => {
       cy.findByRole("form").within(() => {
         cy.findByRole("button", { name: /register/i }).click();
         cy.findByRole("checkbox")
@@ -106,5 +106,64 @@ describe("Main page (when not logged in)", () => {
 
       cy.get('[data-cy="modal"]').should("not.exist");
     });
+  });
+});
+
+describe("Performing requests", () => {
+  beforeEach(() => {
+    cy.visit("/");
+  });
+
+  it("displays toast error when an incorrect login credentials are passed", () => {
+    cy.get("input").each((input) => {
+      cy.wrap(input).type("test-test");
+    });
+
+    cy.findByRole("form").within(() => {
+      cy.findByRole("button", { name: /log in/i }).click();
+    });
+
+    cy.get(".Toastify").should("exist");
+  });
+
+  it("changes header when a user registers", () => {
+    cy.findByRole("button", { name: /register/i }).click();
+
+    cy.findByRole("textbox").type("cypress-test");
+    cy.get("input[type='password']").type("test-test");
+    cy.findByRole("checkbox").click();
+
+    cy.findByRole("form").within(() => {
+      cy.findByRole("button", { name: /register/i }).click();
+    });
+
+    cy.findByRole("banner").contains(/cypress-test/i);
+    cy.findByRole("form").should("not.exist");
+  });
+
+  it("changes header when a user logs in", () => {
+    cy.findByRole("textbox").type("cypress-test");
+    cy.get("input[type='password']").type("test-test");
+
+    cy.findByRole("form").within(() => {
+      cy.findByRole("button", { name: /log in/i }).click();
+    });
+
+    cy.findByRole("banner").contains(/cypress-test/i);
+    cy.findByRole("form").should("not.exist");
+  });
+
+  it("displays toast error when user registers with existing username", () => {
+    cy.findByRole("button", { name: /register/i }).click();
+
+    cy.findByRole("textbox").type("cypress-test");
+    cy.get("input[type='password']").type("test-test");
+    cy.findByRole("checkbox").click();
+
+    cy.findByRole("form").within(() => {
+      cy.findByRole("button", { name: /register/i }).click();
+    });
+
+    cy.get(".Toastify").should("exist");
   });
 });

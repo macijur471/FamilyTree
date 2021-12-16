@@ -1,14 +1,8 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { FunctionComponent, useCallback, useState } from "react";
 import UserContext, { UserContextDataType } from "./User.context";
 
 const UserContextProvider: FunctionComponent = ({ children }) => {
   const [userData, setUserData] = useState({ isLoggedIn: false, username: "" });
-  const [isPending, setIsPending] = useState(true);
 
   const changeUserContextValue = useCallback(
     (obj: {
@@ -19,21 +13,8 @@ const UserContextProvider: FunctionComponent = ({ children }) => {
     [userData]
   );
 
-  useEffect(() => {
-    const checkUser = async () => {
-      //TODO query for checking if user is logged in (?)
-      setTimeout(() => {
-        setIsPending(false);
-      }, 2000);
-    };
-
-    checkUser();
-  }, []);
-
   return (
-    <UserContext.Provider
-      value={{ ...userData, isPending, changeUserContextValue }}
-    >
+    <UserContext.Provider value={{ ...userData, changeUserContextValue }}>
       {children}
     </UserContext.Provider>
   );
