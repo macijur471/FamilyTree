@@ -79,12 +79,12 @@ const theme = {
         red: {
           bg: "var(--dark-red)",
           hoveredBg: "var(--v-dark-red)",
-          fill: "var(--orange)",
+          fill: "var(--yellow)",
         },
         blue: {
           bg: "var(--light-blue)",
           hoveredBg: "var(--med-blue)",
-          fill: "var(--orange)",
+          fill: "var(--yellow)",
         },
         orange: {
           bg: "var(--orange)",
@@ -93,9 +93,18 @@ const theme = {
         },
       },
     },
+    tree: {
+      scrollbarTrack: "var(--med-blue)",
+      scrollbarThumb: "var(--yellow)",
+      scrollbarThumbActive: "var(--orange)",
+    },
   },
   heights: {
     header: "var(--header-height)",
+    treeButtons: "var(--tree-buttons-height)",
+  },
+  paddings: {
+    treeWrapper: "var(--tree-wrapper-padding)",
   },
   borders: { thick: "8px", thin: "4px" },
 };

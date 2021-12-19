@@ -12,8 +12,20 @@ export const centeredDiv = css`
   align-items: center;
 `;
 
+export const centeredTopDiv = css`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+`;
+
 export const centeredLeftDiv = css`
   display: flex;
   justify-content: flex-start;
+  align-items: center;
+`;
+
+export const spaceBetweenDiv = css`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 `;

@@ -17,11 +17,14 @@ export const GlobalStyles = createGlobalStyle`
         --dark-red: #F07167;
         --red: #FF928B;
         --orange: #FED9B7;
-        --dark-orange: #EDC8A6;
+        --dark-orange: #DCB795;
         --yellow: #FDFCDC;
         --white: #FFFFFF;
 
         --header-height: 178px;
+        --tree-buttons-height: 81px;
+
+        --tree-wrapper-padding: 121px;
     }
 
     *, *::after, *::before {
