@@ -10,11 +10,15 @@ const Main: FunctionComponent = () => {
 
   return (
     <MainWrapper>
-      {/* {!isLoggedIn && <UserForm />} 
-      {isLoggedIn && <TreeContextProvider><TreePanel /></TreeContextProvider>}*/}
-      <TreeContextProvider>
+      {!isLoggedIn && <UserForm />}
+      {isLoggedIn && (
+        <TreeContextProvider>
+          <TreePanel />
+        </TreeContextProvider>
+      )}
+      {/* <TreeContextProvider>
         <TreePanel />
-      </TreeContextProvider>
+      </TreeContextProvider> */}
     </MainWrapper>
   );
 };

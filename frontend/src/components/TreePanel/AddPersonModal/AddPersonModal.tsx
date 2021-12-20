@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import Modal from "components/shared/Modal";
 import {
   AddModalHeaderText,
@@ -7,7 +7,7 @@ import {
   AddPersonInputRow,
 } from "./AddPersonModal.components";
 import BgBar from "components/shared/WrapperWithBgBar/BgBar";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import Input from "components/shared/Input";
 import { REQUIRED_MSSG } from "utils/formConsts/userForm.consts";
 import {
@@ -27,6 +27,7 @@ import {
   JOB_MIN_LENGTH_MSSG,
 } from "utils/formConsts/addPersonForm.consts";
 import Button from "components/shared/Button";
+import HobbiesList from "./HobbiesList";
 
 interface Props {
   close?: () => void | Promise<void>;
@@ -39,19 +40,43 @@ type Inputs = {
   dateOfBirth: string;
   dateOfDeath: string;
   job?: string;
+  hobbies: { name: string }[];
 };
 
 const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ defaultValues: { hobbies: [{ name: "" }] } });
+
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: "hobbies",
+    }
+  );
+
+  const hobbiesErrors =
+    errors.hobbies !== undefined
+      ? errors.hobbies
+          ?.filter((e) => e !== undefined)
+          .map((e) => {
+            const match = e.name?.ref?.name.match(/[0-9]+/) ?? ["-1"];
+
+            return {
+              message: e.name?.message ?? "",
+              id: parseInt(match[0]),
+            };
+          })
+      : [];
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
   };
 
+  console.log(errors.hobbies);
   return (
     <Modal close={close} column>
       <AddModalHeaderWrapper>
@@ -127,6 +152,13 @@ const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
               message: JOB_MAX_LENGTH_MSSG,
             },
           })}
+        />
+        <HobbiesList
+          fields={fields}
+          register={register}
+          append={append}
+          remove={remove}
+          errors={hobbiesErrors}
         />
         <Button type="submit" color="green">
           Add

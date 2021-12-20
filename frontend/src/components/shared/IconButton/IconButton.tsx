@@ -6,14 +6,22 @@ interface Props {
   icon: JSX.Element;
   color: keyof ThemeType["colors"]["iconButton"]["theme"];
   onClick?: () => void | Promise<void>;
+  disabled?: boolean;
 }
 
-const IconButton: FunctionComponent<Props> = ({ icon, color, onClick }) => {
+const IconButton: FunctionComponent<Props> = ({
+  icon,
+  color,
+  onClick,
+  disabled = false,
+}) => {
   return (
     <IconButtonWrapper
       onClick={onClick}
       color={color}
       data-testid="add-person-button"
+      type="button"
+      disabled={disabled}
     >
       {icon}
     </IconButtonWrapper>

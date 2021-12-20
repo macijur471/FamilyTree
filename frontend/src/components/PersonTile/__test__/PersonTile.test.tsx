@@ -27,7 +27,7 @@ const renderPersonTile = (
       </ThemeProvider>
     </>
   );
-  const tile = screen.queryByText(name)?.closest("button");
+  const tile = screen.queryByTestId("tile");
   const birthDiv = screen.queryByText(birthDate);
   const addButton = screen.queryByTestId("add-person-button");
   const img = screen.queryByRole("img");
@@ -42,11 +42,6 @@ const mockData: [string, "male" | "female", string] = [
 ];
 
 describe("Person tile", () => {
-  it("renders as a button", () => {
-    const { tile } = renderPersonTile(...mockData);
-    expect(tile).toBeInTheDocument();
-  });
-
   it("has add person button", () => {
     const { addButton } = renderPersonTile(...mockData);
     expect(addButton).toBeInTheDocument();

@@ -16,6 +16,7 @@ interface Props {
   type?: "text" | "password" | "date";
   register?: UseFormRegisterReturn;
   theme?: "light" | "dark";
+  noLabel?: boolean;
 }
 
 const Input: FunctionComponent<Props> = ({
@@ -25,10 +26,11 @@ const Input: FunctionComponent<Props> = ({
   placeholder = `${label}...`,
   type = "text",
   theme = "light",
+  noLabel = false,
 }) => {
   return (
     <InputWrapper>
-      <InputLabel htmlFor={label}>{label}</InputLabel>
+      {!noLabel && <InputLabel htmlFor={label}>{label}</InputLabel>}
       <InputElement
         name={label}
         id={label}

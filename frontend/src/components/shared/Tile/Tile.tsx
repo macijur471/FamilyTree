@@ -11,7 +11,7 @@ interface Props {
 
 const Tile: FunctionComponent<Props> = ({ bg, text, onClick, children }) => {
   return (
-    <TileWrapper bg={bg} onClick={onClick}>
+    <TileWrapper bg={bg} onClick={onClick} data-testid="tile">
       <TileTextWrapper>
         <TileText>{text}</TileText>
         <BgBar color="light" />
