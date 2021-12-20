@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import { centeredDiv } from "styles/mixins";
 
-const Button = styled.button`
+const Button = styled.button<{ color?: "green" | "red" }>`
   ${centeredDiv}
 
-  color: ${({ theme }) => theme.colors.button.textColor};
+  color: ${({ theme, color }) =>
+    color
+      ? theme.colors.button.textColor[color]
+      : theme.colors.button.textColor["red"]};
   font-size: ${({ theme }) => theme.fonts.sizes.base};
 
-  background-color: ${({ theme }) => theme.colors.button.bg};
+  background-color: ${({ theme, color }) =>
+    color ? theme.colors.button.bg[color] : theme.colors.button.bg["red"]};
 
   padding: 0 34px;
   margin-top: 45px;
@@ -33,7 +37,10 @@ const Button = styled.button`
     transform-origin: 50% 0%;
     transition: transform 0.2s ease-out;
 
-    background-color: ${({ theme }) => theme.colors.button.hoveredBg};
+    background-color: ${({ theme, color }) =>
+      color
+        ? theme.colors.button.hoveredBg[color]
+        : theme.colors.button.hoveredBg["red"]};
   }
 
   &:hover::after,

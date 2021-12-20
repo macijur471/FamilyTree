@@ -9,18 +9,21 @@ const FirstPersonTile: FunctionComponent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
-    <Tile bg="add" text="Add first family member">
-      <FirstPersonTileAddButtonWrapper>
-        <IconButton
-          onClick={() => setIsModalVisible(true)}
-          icon={<AddIcon />}
-          color="green"
-        />
-        {isModalVisible && (
-          <AddPersonModal close={() => setIsModalVisible(false)} />
-        )}
-      </FirstPersonTileAddButtonWrapper>
-    </Tile>
+    <>
+      <Tile bg="add" text="Add first family member">
+        <FirstPersonTileAddButtonWrapper>
+          <IconButton
+            onClick={() => setIsModalVisible(true)}
+            icon={<AddIcon />}
+            color="green"
+          />
+        </FirstPersonTileAddButtonWrapper>
+      </Tile>
+
+      {isModalVisible && (
+        <AddPersonModal close={() => setIsModalVisible(false)} />
+      )}
+    </>
   );
 };
 

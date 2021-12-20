@@ -38,20 +38,25 @@ const theme = {
     input: {
       bg: "#FFFFFF",
       underlineColor: "var(--med-blue)",
-      underlineActiveColor: "var(--red)",
       placeholderColor: "var(--med-blue)",
       textColor: "var(--almost-black)",
+      light: {
+        underlineActiveColor: "var(--red)",
+      },
+      dark: {
+        underlineActiveColor: "var(--lime)",
+      },
     },
     button: {
-      textColor: "#FFFFFF",
-      bg: "var(--red)",
-      hoveredBg: "var(--dark-red)",
+      textColor: { red: "#FFFFFF", green: "var(--dark-blue)" },
+      bg: { red: "var(--red)", green: "var(--lime)" },
+      hoveredBg: { red: "var(--dark-red)", green: "var(--dark-lime)" },
     },
     modal: {
       bg: {
         male: "var(--turqoise)",
         female: "var(--red)",
-        default: "var(--med-blue)",
+        default: "var(--light-blue)",
       },
     },
     personTile: {

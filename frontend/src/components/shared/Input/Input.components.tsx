@@ -16,6 +16,7 @@ export const InputWrapper = styled.div`
 export const InputLabel = styled.label`
   font-size: ${({ theme }) => theme.fonts.sizes.xl};
   font-family: ${({ theme }) => theme.fonts.families.fancy};
+  color: ${({ theme }) => theme.colors.text.dark};
 
   cursor: pointer;
 `;
@@ -42,7 +43,7 @@ export const InputElement = styled.input`
   }
 `;
 
-export const InputUnderline = styled.div`
+export const InputUnderline = styled.div<{ themeColor: "light" | "dark" }>`
   width: 100%;
   height: ${({ theme }) => theme.borders.thick};
 
@@ -60,7 +61,8 @@ export const InputUnderline = styled.div`
     width: 100%;
     height: 100%;
 
-    background-color: ${({ theme }) => theme.colors.input.underlineActiveColor};
+    background-color: ${({ theme, themeColor }) =>
+      theme.colors.input[themeColor].underlineActiveColor};
 
     transform: scaleX(0);
     transform-origin: 0% 50%;

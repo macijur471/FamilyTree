@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { dateToString } from "utils/functions/dateToString";
 import {
   InputElement,
   InputError,
@@ -12,8 +13,9 @@ interface Props {
   label: string;
   placeholder?: string;
   errorMssg?: string;
-  type?: "text" | "password";
+  type?: "text" | "password" | "date";
   register?: UseFormRegisterReturn;
+  theme?: "light" | "dark";
 }
 
 const Input: FunctionComponent<Props> = ({
@@ -22,6 +24,7 @@ const Input: FunctionComponent<Props> = ({
   errorMssg,
   placeholder = `${label}...`,
   type = "text",
+  theme = "light",
 }) => {
   return (
     <InputWrapper>
@@ -31,9 +34,10 @@ const Input: FunctionComponent<Props> = ({
         id={label}
         placeholder={placeholder}
         type={type}
+        max={type === "date" ? dateToString(new Date()) : undefined}
         {...register}
       />
-      <InputUnderline />
+      <InputUnderline themeColor={theme} />
       <InputError data-cy="input-error" data-testid="input-error">
         {errorMssg}
       </InputError>

@@ -29,3 +29,28 @@ export const spaceBetweenDiv = css`
   justify-content: space-between;
   align-items: center;
 `;
+
+export const darkBgScroll = css`
+  @-moz-document url-prefix() {
+    /* scrollbar Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: ${({ theme }) => theme.colors.tree.scrollbarThumb}
+      ${({ theme }) => theme.colors.tree.scrollbarTrack};
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.tree.scrollbarTrack};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.tree.scrollbarThumb};
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.tree.scrollbarThumbActive};
+  }
+`;
