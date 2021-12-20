@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { centeredDiv, columnDiv } from "styles/mixins";
 import { ThemeType } from "styles/theme";
 import { WrapperWithBgBar } from "../WrapperWithBgBar/WrapperWithBgBar";
 
-export const TileWrapper = styled.button<{
+export const TileWrapper = styled.div<{
   bg: keyof ThemeType["colors"]["personTile"]["bg"];
 }>`
   ${columnDiv}
@@ -12,10 +12,17 @@ export const TileWrapper = styled.button<{
   height: ${({ bg }) => (bg === "add" ? "125px" : "191px")};
 
   padding: 20px;
+  ${({ bg }) =>
+    bg === "add" &&
+    css`
+      margin: auto 0;
+    `}
 
   background-color: ${({ bg, theme }) => theme.colors.personTile.bg[bg]};
 
   border-top-left-radius: 15px;
+
+  cursor: pointer;
 
   position: relative;
   z-index: 1;

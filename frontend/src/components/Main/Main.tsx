@@ -3,6 +3,7 @@ import { MainWrapper } from "./Main.components";
 import UserForm from "components/UserForm";
 import { useUserContext } from "context/UserContext/useUserContext";
 import TreePanel from "components/TreePanel";
+import TreeContextProvider from "context/TreeContext/TreeContext.provider";
 
 const Main: FunctionComponent = () => {
   const { isLoggedIn } = useUserContext();
@@ -10,8 +11,10 @@ const Main: FunctionComponent = () => {
   return (
     <MainWrapper>
       {/* {!isLoggedIn && <UserForm />} 
-      {isLoggedIn && <TreePanel />}*/}
-      <TreePanel />
+      {isLoggedIn && <TreeContextProvider><TreePanel /></TreeContextProvider>}*/}
+      <TreeContextProvider>
+        <TreePanel />
+      </TreeContextProvider>
     </MainWrapper>
   );
 };
