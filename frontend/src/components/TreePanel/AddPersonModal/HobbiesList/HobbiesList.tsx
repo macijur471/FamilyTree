@@ -60,7 +60,7 @@ const HobbiesList: FunctionComponent<Props> = ({
             label="Enter a hobby"
             noLabel
             register={register(`hobbies.${index}.name`, {
-              required: { value: true, message: REQUIRED_MSSG },
+              required: { value: fields.length !== 1, message: REQUIRED_MSSG },
               minLength: {
                 value: HOBBY_MIN_LENGTH,
                 message: HOBBY_MIN_LENGTH_MSSG,

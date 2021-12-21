@@ -17,12 +17,14 @@ interface Props {
   register?: UseFormRegisterReturn;
   theme?: "light" | "dark";
   noLabel?: boolean;
+  onChange?: () => void | Promise<void>;
 }
 
 const Input: FunctionComponent<Props> = ({
   label,
   register,
   errorMssg,
+  onChange,
   placeholder = `${label}...`,
   type = "text",
   theme = "light",
@@ -37,6 +39,8 @@ const Input: FunctionComponent<Props> = ({
         placeholder={placeholder}
         type={type}
         max={type === "date" ? dateToString(new Date()) : undefined}
+        min={type === "date" ? "1900-01-01" : undefined}
+        onChange={onChange}
         {...register}
       />
       <InputUnderline themeColor={theme} />

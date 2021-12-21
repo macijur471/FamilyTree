@@ -35,7 +35,7 @@ export const AddPersonInputRow = styled.div`
   width:100%;
 
   & > * {
-    width: 186px !important;
+    width: 196px !important;
     margin-top: 0 !important;
   }
 `;

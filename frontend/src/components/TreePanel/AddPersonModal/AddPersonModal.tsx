@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FunctionComponent } from "react";
 import Modal from "components/shared/Modal";
 import {
   AddModalHeaderText,
@@ -28,11 +28,32 @@ import {
 } from "utils/formConsts/addPersonForm.consts";
 import Button from "components/shared/Button";
 import HobbiesList from "./HobbiesList";
+import RelationSelect from "./RelationSelect";
+import { dateToString } from "utils/functions/dateToString";
 
 interface Props {
   close?: () => void | Promise<void>;
   sourcePerson?: { fullName: string; dateOfBirth: string };
 }
+
+type relOptionsT =
+  | "Parent"
+  | "Child"
+  | "Sibling"
+  | "Adopted child"
+  | "Adopted parent"
+  | "Spouse"
+  | "Divorced";
+
+const relOptions: relOptionsT[] = [
+  "Parent",
+  "Child",
+  "Sibling",
+  "Adopted child",
+  "Adopted parent",
+  "Spouse",
+  "Divorced",
+];
 
 type Inputs = {
   fullName: string;
@@ -41,15 +62,20 @@ type Inputs = {
   dateOfDeath: string;
   job?: string;
   hobbies: { name: string }[];
+  relation?: relOptionsT;
 };
 
-const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
+const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
   const {
     register,
     control,
     handleSubmit,
+    setError,
+    watch,
     formState: { errors },
   } = useForm<Inputs>({ defaultValues: { hobbies: [{ name: "" }] } });
+
+  const watchBirthDate = watch("dateOfBirth", "");
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
@@ -73,6 +99,15 @@ const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
       : [];
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    //check if birth is before death
+    if (new Date(data.dateOfBirth) > new Date(data.dateOfDeath)) {
+      setError(
+        "dateOfBirth",
+        { message: "Date of birth cannot be after date of death!" },
+        { shouldFocus: true }
+      );
+      return;
+    }
     console.log(data);
   };
 
@@ -122,6 +157,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
         />
         <AddPersonInputRow>
           <Input
+            theme="dark"
             type="date"
             label="Date of Birth"
             errorMssg={errors.dateOfBirth?.message}
@@ -130,6 +166,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
             })}
           />
           <Input
+            theme="dark"
             type="date"
             label="Date of Death"
             errorMssg={errors.dateOfDeath?.message}
@@ -160,6 +197,41 @@ const AddPersonModal: FunctionComponent<Props> = ({ close }) => {
           remove={remove}
           errors={hobbiesErrors}
         />
+        {sourcePerson && (
+          <RelationSelect
+            options={relOptions}
+            name={sourcePerson.fullName}
+            errorMssg={errors.relation?.message}
+            register={register("relation", {
+              validate: (relation) => {
+                switch (relation) {
+                  case "Parent":
+                  case "Adopted parent": {
+                    if (
+                      new Date(sourcePerson.dateOfBirth) <=
+                        new Date(watchBirthDate) ||
+                      watchBirthDate === ""
+                    )
+                      return `This person cannot be ${sourcePerson.fullName}'s parent!`;
+                    return true;
+                  }
+                  case "Child":
+                  case "Adopted child": {
+                    if (
+                      new Date(sourcePerson.dateOfBirth) >=
+                        new Date(watchBirthDate) ||
+                      watchBirthDate === ""
+                    )
+                      return `This person cannot be ${sourcePerson.fullName}'s child!`;
+                    return true;
+                  }
+                  default:
+                    return true;
+                }
+              },
+            })}
+          />
+        )}
         <Button type="submit" color="green">
           Add
         </Button>
