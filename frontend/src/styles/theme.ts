@@ -103,6 +103,10 @@ const theme = {
       scrollbarThumb: "var(--yellow)",
       scrollbarThumbActive: "var(--orange)",
     },
+    addPersonModal: {
+      imagesInputBg: "var(--yellow)",
+      imagesInputBgHover: "var(--lime)",
+    },
   },
   heights: {
     header: "var(--header-height)",

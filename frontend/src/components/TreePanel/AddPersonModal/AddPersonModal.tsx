@@ -29,7 +29,7 @@ import {
 import Button from "components/shared/Button";
 import HobbiesList from "./HobbiesList";
 import RelationSelect from "./RelationSelect";
-import { dateToString } from "utils/functions/dateToString";
+import ImagesInput from "./ImagesInput";
 
 interface Props {
   close?: () => void | Promise<void>;
@@ -63,6 +63,7 @@ type Inputs = {
   job?: string;
   hobbies: { name: string }[];
   relation?: relOptionsT;
+  images?: FileList;
 };
 
 const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
@@ -76,13 +77,12 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
   } = useForm<Inputs>({ defaultValues: { hobbies: [{ name: "" }] } });
 
   const watchBirthDate = watch("dateOfBirth", "");
+  const watchImages = watch("images", undefined);
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "hobbies",
-    }
-  );
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "hobbies",
+  });
 
   const hobbiesErrors =
     errors.hobbies !== undefined
@@ -232,6 +232,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
             })}
           />
         )}
+        <ImagesInput register={register("images")} images={watchImages} />
         <Button type="submit" color="green">
           Add
         </Button>
