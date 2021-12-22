@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FunctionComponent } from "react";
 import { ImagesListImg, ImagesListWrapper } from "./ImagesList.components";
 
 interface Props {
@@ -6,18 +6,15 @@ interface Props {
 }
 
 const ImagesList: FunctionComponent<Props> = ({ images }) => {
-  const imgs = useMemo(() => {
-    if (!images) return [];
-
-    const arr = [];
+  const imgs = [];
+  if (images) {
     for (let i = 0; i < images.length; i++) {
       const item = images.item(i);
       if (!item) continue;
 
-      arr.push(<ImagesListImg src={URL.createObjectURL(item)} key={i} />);
+      imgs.push(<ImagesListImg src={URL.createObjectURL(item)} key={i} />);
     }
-    return arr;
-  }, [images]);
+  }
 
   return <ImagesListWrapper>{images && imgs}</ImagesListWrapper>;
 };

@@ -29,7 +29,7 @@ const renderPersonTile = (
   );
   const tile = screen.queryByTestId("tile");
   const birthDiv = screen.queryByText(birthDate);
-  const addButton = screen.queryByTestId("add-person-button");
+  const addButton = screen.queryByTestId("icon-button");
   const img = screen.queryByRole("img");
 
   return { tile, addButton, img, birthDiv };

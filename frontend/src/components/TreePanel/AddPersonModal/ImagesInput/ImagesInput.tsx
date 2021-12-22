@@ -1,6 +1,6 @@
+import React, { FunctionComponent } from "react";
 import ImagesList from "components/shared/ImagesList";
 import { InputLabel } from "components/shared/Input/Input.components";
-import React, { FunctionComponent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import {
   FakeImagesInputElement,
@@ -17,10 +17,11 @@ interface Props {
 const ImagesInput: FunctionComponent<Props> = ({ register, images }) => {
   return (
     <ImagesInputWrapper>
-      <InputLabel>Images</InputLabel>
+      <InputLabel htmlFor="images">Images</InputLabel>
       <ImagesInputElementWrapper>
         <ImagesInputElement
           type="file"
+          id="images"
           accept="image/png, image/jpeg"
           multiple
           {...register}

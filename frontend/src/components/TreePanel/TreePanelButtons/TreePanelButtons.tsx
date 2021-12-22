@@ -7,7 +7,7 @@ import { ReactComponent as PdfIcon } from "images/pdfIcon.svg";
 
 const TreePanelButtons: FunctionComponent = () => {
   return (
-    <TreePanelButtonsWrapper>
+    <TreePanelButtonsWrapper data-cy="export-buttons">
       <IconButton color="orange" icon={<HTMLIcon />} />
       <IconButton color="red" icon={<PdfIcon />} />
       <IconButton color="blue" icon={<LogoutIcon />} />

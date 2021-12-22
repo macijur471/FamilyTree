@@ -19,7 +19,7 @@ const IconButton: FunctionComponent<Props> = ({
     <IconButtonWrapper
       onClick={onClick}
       color={color}
-      data-testid="add-person-button"
+      data-testid="icon-button"
       type="button"
       disabled={disabled}
     >

@@ -30,20 +30,12 @@ import Button from "components/shared/Button";
 import HobbiesList from "./HobbiesList";
 import RelationSelect from "./RelationSelect";
 import ImagesInput from "./ImagesInput";
+import { relOptionsT } from "utils/types/relationOptions.type";
 
 interface Props {
   close?: () => void | Promise<void>;
   sourcePerson?: { fullName: string; dateOfBirth: string };
 }
-
-type relOptionsT =
-  | "Parent"
-  | "Child"
-  | "Sibling"
-  | "Adopted child"
-  | "Adopted parent"
-  | "Spouse"
-  | "Divorced";
 
 const relOptions: relOptionsT[] = [
   "Parent",
@@ -111,7 +103,6 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
     console.log(data);
   };
 
-  console.log(errors.hobbies);
   return (
     <Modal close={close} column>
       <AddModalHeaderWrapper>
@@ -170,9 +161,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
             type="date"
             label="Date of Death"
             errorMssg={errors.dateOfDeath?.message}
-            register={register("dateOfDeath", {
-              required: { value: true, message: REQUIRED_MSSG },
-            })}
+            register={register("dateOfDeath")}
           />
         </AddPersonInputRow>
         <Input
