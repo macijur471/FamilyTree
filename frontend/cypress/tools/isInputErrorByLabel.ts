@@ -6,8 +6,14 @@ export const isInputErrorByLabel = (label: string, isError) => {
       .parent()
       .children()
       .last()
-      .contains(/^.{1,}$/);
+      .invoke("text")
+      .should("match", /^.{1,}$/);
   } else {
-    cy.get("@input").parent().children().last().should("not.have.text");
+    cy.get("@input")
+      .parent()
+      .children()
+      .last()
+      .invoke("text")
+      .should("not.match", /^.{1,}$/);
   }
 };

@@ -15,6 +15,15 @@ interface Props {
 }
 
 const ImagesInput: FunctionComponent<Props> = ({ register, images }) => {
+  const imgs = [];
+  if (images) {
+    for (let i = 0; i < images.length; i++) {
+      const item = images.item(i);
+      if (!item) continue;
+
+      imgs.push(URL.createObjectURL(item));
+    }
+  }
   return (
     <ImagesInputWrapper>
       <InputLabel htmlFor="images">Images</InputLabel>
@@ -28,7 +37,7 @@ const ImagesInput: FunctionComponent<Props> = ({ register, images }) => {
         />
         <FakeImagesInputElement>Select images...</FakeImagesInputElement>
       </ImagesInputElementWrapper>
-      <ImagesList images={images} />
+      <ImagesList images={imgs} />
     </ImagesInputWrapper>
   );
 };
