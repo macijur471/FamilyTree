@@ -5,6 +5,7 @@ use crate::dal::Database;
 pub mod controller;
 pub mod dal;
 pub mod errors;
+pub mod middleware;
 pub mod models;
 
 pub struct AppState<'a> {

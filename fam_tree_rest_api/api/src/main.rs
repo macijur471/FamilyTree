@@ -1,4 +1,5 @@
 use actix_web::{middleware, web, App, HttpServer};
+use api::middleware::AuthMiddlewareFactory;
 use std::sync::{Arc, Mutex};
 // use api::dal::Database;
 use api::{controller, dal::Database, AppState};
@@ -18,6 +19,7 @@ async fn main() -> std::io::Result<()> {
 
     let app = HttpServer::new(move || {
         App::new()
+            .wrap(AuthMiddlewareFactory)
             .wrap(middleware::DefaultHeaders::new().header("Content-Type", "application/json"))
             .wrap(middleware::Logger::default())
             .app_data(app_state.clone())

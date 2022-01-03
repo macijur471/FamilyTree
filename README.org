@@ -18,14 +18,13 @@ Build provided images and start services with one command.
 Choose one of the following commands depending on the needed environment.
 + Dev 
     #+BEGIN_EXAMPLE
-    docker-compose up -d --build
+    docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
     #+END_EXAMPLE
 + Prod
     #+BEGIN_EXAMPLE
-    export IMAGE_REG=<registry>
-    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
+    docker-compose up -d --build
     #+END_EXAMPLE
-
+    
 Assuming the builds haven't failed, check whether neccessary containers/services are already up, it may take some time.
 #+BEGIN_EXAMPLE
 docker-compose ps
@@ -54,6 +53,36 @@ By default ~host=localhost~ and ~haproxy_port=80~ (if haproxy uses default port,
 
 Currently paths for specific services are also presented on the diagram below
 [[./media/Paths.drawio.svg]]
+
+** testing
+*** integration tests
+For these type of tests we used [Pytest](https://docs.pytest.org/en/6.2.x/)  alongside with docker-compose which sets up the environment
+Location of the tests - [[./integration_tests]]
+
+**** How to run:
+You can use virtual environment (recommended)
+
+Install dependencies 
+    #+BEGIN_EXAMPLE
+    pip install -r integration_tests/requirements.txt
+    #+END_EXAMPLE
+
+
+Being in the project root directory start tests with one of the command below
+
++ Create new infrastructure for the tests (make sure project containers are down)
+    #+BEGIN_EXAMPLE
+        python -m pytest integration_tests \
+        --docker-compose=docker-compose.yaml 
+    #+END_EXAMPLE
+
++ Use existing infrastructure (not recommended though, may cause duplicates in database)
+    #+BEGIN_EXAMPLE
+        python -m pytest integration_tests \
+        --docker-compose=docker-compose.yaml --docker-compose-no-build \
+        --use-running-containers
+    #+END_EXAMPLE
+
 
 
 ** Technologies

@@ -1,54 +1,40 @@
-# syntax=docker/dockerfile:1.3
 ARG PG_MIGRATIONS_DIR=/migrations
-ARG API_PORT=5000
 
-# builder stage
-FROM rust:1.54.0 as builder
+FROM lukemathwalker/cargo-chef:latest-rust-1.53.0 AS chef
+WORKDIR app
 
-WORKDIR /family_tree
-
+FROM chef AS planner
 COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,sharing=private,target=/family_tree/target \
-    cargo build --release && \
-    cp target/release/migrator ./migrator/ && \
-    cp target/release/api ./api/
+FROM chef AS builder
+COPY --from=planner /app/recipe.json recipe.json
+# Build dependencies - this is the caching Docker layer!
+RUN cargo chef cook --release --recipe-path recipe.json
+# Build application
+COPY . .
+RUN cargo build --release
 
-# migrator binary
-FROM debian:buster-slim as migrator
-
+# We do not need the Rust toolchain to run the binary!
+FROM debian:buster-slim AS migrator
 RUN apt-get update \
     && apt-get install -y openssl ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ARG PG_MIGRATIONS_DIR
-RUN adduser --disabled-password migrator
 
+WORKDIR app
 COPY ./migrations ${PG_MIGRATIONS_DIR}
-COPY --from=builder /family_tree/migrator/migrator /opt/
+COPY --from=builder /app/target/release/migrator /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/migrator"]
 
-USER migrator
-ENV PATH="/opt:$PATH"
-
-ENTRYPOINT migrator
-
-
-# api binary
-FROM debian:buster-slim as tree_api
-
+FROM debian:buster-slim AS tree_api
 RUN apt-get update \
     && apt-get install -y openssl ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN adduser --disabled-password api_runner
-
-COPY --from=builder /family_tree/api/api /opt/tree_api
-
-USER api_runner
-ENV PATH="/opt:$PATH"
-
-EXPOSE ${API_PORT}
-ENTRYPOINT tree_api
+WORKDIR app
+COPY --from=builder /app/target/release/api /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/api"]
