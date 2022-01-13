@@ -1,4 +1,4 @@
-use super::models::{FamTree, Family, Id, Individual, Relationship};
+use super::models::{FamTree, Family, Id, Individual, IndividualBaseInfo, Relationship};
 
 pub mod db_context;
 mod family_dal;

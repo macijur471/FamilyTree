@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use super::{
     relationships::{PreparedRelation, RelType, Relationships, Role},
     Id, Individual, PgId,
@@ -7,7 +9,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct FamTree {
-    pub individual: PgId,
+    pub id: String,
+    pub gender: String,
     pub siblings: Vec<PreparedRelation>,
     pub parents: Vec<PreparedRelation>,
     pub children: Vec<PreparedRelation>,
@@ -15,10 +18,10 @@ pub struct FamTree {
 }
 
 impl FamTree {
-    pub fn from_rels(ids: &Vec<Id>, rels: &Vec<Relationships>) -> Vec<FamTree> {
+    pub fn from_rels(ids: &Vec<(Id, String)>, rels: &Vec<Relationships>) -> Vec<FamTree> {
         let converted = ids
             .iter()
-            .map(|&id| {
+            .map(|(id, gender)| {
                 let mut siblings = Vec::new();
                 let mut parents = Vec::new();
                 let mut spouses = Vec::new();
@@ -37,7 +40,7 @@ impl FamTree {
                     role_matcher(
                         role,
                         PreparedRelation {
-                            id: id_for_rel,
+                            id: id_for_rel.unwrap().to_string(),
                             rel_type,
                         },
                     );
@@ -45,12 +48,12 @@ impl FamTree {
 
                 rels.iter().for_each(|rel| {
                     match id {
-                        n if rel.individual_1_id == n => create_prep_relation(
+                        n if rel.individual_1_id == *n => create_prep_relation(
                             rel.individual_2_id,
                             &rel.individual_2_role,
                             rel.relationship_type,
                         ),
-                        n if rel.individual_2_id == n => create_prep_relation(
+                        n if rel.individual_2_id == *n => create_prep_relation(
                             rel.individual_1_id,
                             &rel.individual_1_role,
                             rel.relationship_type,
@@ -59,7 +62,8 @@ impl FamTree {
                     };
                 });
                 FamTree {
-                    individual: id.unwrap(),
+                    id: id.unwrap().to_string(),
+                    gender: gender.to_string(),
                     siblings,
                     parents,
                     children,
@@ -74,7 +78,7 @@ impl FamTree {
 
 #[test]
 fn test_empty_input_results_empty_tree() {
-    let ids: Vec<Id> = Vec::new();
+    let ids: Vec<(Id, String)> = Vec::new();
     let rels: Vec<Relationships> = Vec::new();
 
     let result = FamTree::from_rels(&ids, &rels);
@@ -84,13 +88,13 @@ fn test_empty_input_results_empty_tree() {
 #[test]
 fn test_single_id_input_results_single_ind() {
     let id = 1i32;
-    let ids: Vec<Id> = vec![Some(id)];
+    let ids: Vec<(Id, String)> = vec![(Some(id), "test".to_string())];
     let rels: Vec<Relationships> = Vec::new();
 
     let result = FamTree::from_rels(&ids, &rels);
 
     assert_eq!(result.len(), 1);
-    assert_eq!(result[0].individual, id);
+    assert_eq!(result[0].id, id.to_string());
     assert!(result[0].children.is_empty());
     assert!(result[0].parents.is_empty());
     assert!(result[0].spouses.is_empty());
@@ -99,28 +103,32 @@ fn test_single_id_input_results_single_ind() {
 
 #[test]
 fn test_relations_correct_output() {
-    let ids: Vec<Id> = vec![Some(1), Some(2), Some(3)];
+    let ids: Vec<(Id, String)> = vec![
+        (Some(1), "test1".to_string()),
+        (Some(2), "test2".to_string()),
+        (Some(3), "test3".to_string()),
+    ];
     let rels: Vec<Relationships> = vec![
         Relationships {
             id: Some(0),
-            individual_1_id: ids[0],
-            individual_2_id: ids[1],
+            individual_1_id: ids[0].0,
+            individual_2_id: ids[1].0,
             relationship_type: RelType::Blood,
             individual_1_role: Role::Child,
             individual_2_role: Role::Parent,
         },
         Relationships {
             id: Some(1),
-            individual_1_id: ids[1],
-            individual_2_id: ids[2],
+            individual_1_id: ids[1].0,
+            individual_2_id: ids[2].0,
             relationship_type: RelType::Married,
             individual_1_role: Role::Spouse,
             individual_2_role: Role::Spouse,
         },
         Relationships {
             id: Some(2),
-            individual_1_id: ids[2],
-            individual_2_id: ids[0],
+            individual_1_id: ids[2].0,
+            individual_2_id: ids[0].0,
             relationship_type: RelType::Blood,
             individual_1_role: Role::Parent,
             individual_2_role: Role::Child,

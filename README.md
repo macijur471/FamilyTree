@@ -1,23 +1,24 @@
 
 # Table of Contents
 
-1.  [Family Tree IO Project](#org6139d20)
-    1.  [usage](#orgcb7c8ef)
-    2.  [development](#orge17bfc3)
-    3.  [testing](#org6356813)
-    4.  [Technologies](#org2350180)
-    5.  [TODO](#orgc84cdc9)
+1.  [Family Tree IO Project](#org09f5083)
+    1.  [usage](#org1f9838b)
+    2.  [development](#org6314400)
+    3.  [testing](#org706e908)
+    4.  [api documentation](#org171b4f1)
+    5.  [Technologies](#org1152ff0)
+    6.  [TODO](#org98fe16b)
 
 
 
-<a id="org6139d20"></a>
+<a id="org09f5083"></a>
 
 # Family Tree IO Project
 
 A feature-rich web application that <del>is</del> will be designed for creating family trees. <del>User-friendly ui design with many functionalities</del>.
 
 
-<a id="orgcb7c8ef"></a>
+<a id="org1f9838b"></a>
 
 ## usage
 
@@ -56,7 +57,7 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
 
 
-<a id="orge17bfc3"></a>
+<a id="org6314400"></a>
 
 ## development
 
@@ -75,7 +76,7 @@ Currently paths for specific services are also presented on the diagram below
 ![img](./media/Paths.drawio.svg)
 
 
-<a id="org6356813"></a>
+<a id="org706e908"></a>
 
 ## testing
 
@@ -107,7 +108,14 @@ Location of the tests - <./integration_tests>
             --use-running-containers
 
 
-<a id="org2350180"></a>
+<a id="org171b4f1"></a>
+
+## api documentation
+
+Interactive documentation of the api can be found at [<http://{host}:{port}/api/docs>](<http://localhost/api/docs>)
+
+
+<a id="org1152ff0"></a>
 
 ## Technologies
 
@@ -152,7 +160,7 @@ Location of the tests - <./integration_tests>
     -   cypress
 
 
-<a id="orgc84cdc9"></a>
+<a id="org98fe16b"></a>
 
 ## TODO
 

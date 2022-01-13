@@ -4,6 +4,7 @@ mod individuals;
 pub mod relationships;
 
 pub type Individual = individuals::Individuals;
+pub type IndividualBaseInfo = individuals::IndividualBaseInfo;
 pub type Relationship = relationships::Relationships;
 pub type Family = families::Families;
 pub type FamTree = fam_tree::FamTree;

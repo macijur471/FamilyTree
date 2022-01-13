@@ -22,11 +22,15 @@ async fn main() -> std::io::Result<()> {
             .wrap(AuthMiddlewareFactory)
             .wrap(middleware::DefaultHeaders::new().header("Content-Type", "application/json"))
             .wrap(middleware::Logger::default())
+            .wrap(middleware::NormalizePath::new(
+                middleware::TrailingSlash::Trim,
+            ))
             .app_data(app_state.clone())
             .configure(controller::init_individuals_controller)
             .configure(controller::init_relationships_controller)
             .configure(controller::init_families_controller)
             .configure(controller::init_health_controller)
+            .configure(controller::init_api_docs)
             .default_service(web::route().to(controller::default_route::not_found))
     })
     .bind(config.get_app_url())?;

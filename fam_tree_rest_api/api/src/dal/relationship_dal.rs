@@ -3,7 +3,7 @@ use sqlx::postgres::PgQueryResult;
 use sqlx::Row;
 
 #[derive(sqlx::FromRow)]
-pub struct IndId(Id);
+pub struct IndId(Id, String);
 
 impl Table<'_, Relationship> {
     pub async fn create_relationship(
@@ -55,13 +55,16 @@ impl Table<'_, Relationship> {
 
         let ids: Vec<IndId> = sqlx::query_as(
             r#"
-            SELECT individual_id FROM individualtofamilies WHERE family_id = $1"#,
+            SELECT if.individual_id, i.gender
+            FROM individualtofamilies if LEFT JOIN individuals i
+            ON i.id = if.individual_id
+            WHERE if.family_id = $1"#,
         )
         .bind(family_id)
         .fetch_all(&*self.pool)
         .await?;
 
-        let ids = ids.iter().map(|obj| obj.0).collect();
+        let ids = ids.iter().map(|obj| (obj.0, obj.1.to_owned())).collect();
 
         Ok(FamTree::from_rels(&ids, &rels))
     }

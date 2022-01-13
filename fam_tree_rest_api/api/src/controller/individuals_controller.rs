@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 use super::AppState;
 use crate::errors::AppError;
-use crate::models::Individual;
+use crate::models::relationships::{RelType, Role};
+use crate::models::{Individual, Relationship};
+use log::debug;
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -43,12 +45,23 @@ async fn edit_individual(
     Ok(HttpResponse::Ok().json(query_res))
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct PostIndividualBodyReq {
+    #[serde(flatten)]
+    pub ind: Individual,
+
+    pub relative: Option<String>,
+    pub relation: Option<RelType>,
+    pub role: Option<Role>,
+}
+
 #[post("")]
 async fn create_individual(
     app_state: web::Data<AppState<'_>>,
-    individual: web::Json<Individual>,
+    body: web::Json<PostIndividualBodyReq>,
 ) -> Result<impl Responder, AppError> {
-    let individual = individual.into_inner();
+    let body = body.into_inner();
+    let individual = body.ind;
 
     let query_res = app_state
         .context
@@ -57,6 +70,32 @@ async fn create_individual(
         .await?;
 
     let ind_id = IndividualId { id: query_res };
+
+    if body.relative.is_some() && body.relation.is_some() && body.role.is_some() {
+        let relative_id = body.relative.unwrap().parse().unwrap();
+
+        let relation = Relationship::new(
+            None,
+            Some(ind_id.id),
+            Some(relative_id),
+            body.relation.unwrap(),
+            body.role.unwrap(),
+        );
+
+        let query_res = app_state
+            .context
+            .relationships
+            .create_relationship(&relation)
+            .await?;
+        debug!("{:?}", query_res);
+
+        app_state
+            .context
+            .families
+            .create_individual_family_rel(relative_id, ind_id.id)
+            .await?;
+    }
+
     Ok(HttpResponse::Created().json(ind_id))
 }
 

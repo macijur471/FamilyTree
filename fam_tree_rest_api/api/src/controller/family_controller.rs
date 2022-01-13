@@ -33,7 +33,6 @@ async fn get_family(
     id: web::Query<IndividualId>,
     app_state: web::Data<AppState<'_>>,
 ) -> Result<HttpResponse, AppError> {
-    println!("heelp");
     let id = id.into_inner();
 
     let family = app_state

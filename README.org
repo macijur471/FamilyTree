@@ -83,6 +83,8 @@ Being in the project root directory start tests with one of the command below
         --use-running-containers
     #+END_EXAMPLE
 
+** api documentation
+Interactive documentation of the api can be found at [http://{host}:{port}/api/docs](http://localhost/api/docs)
 
 
 ** Technologies

@@ -1,10 +1,13 @@
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::AppState;
 
 use crate::errors::AppError;
-use crate::models::{Individual, Relationship};
+use crate::models::{
+    relationships::{RelType, Role},
+    FamTree, Id, Individual, IndividualBaseInfo, Relationship,
+};
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(create_relationship)
@@ -17,12 +20,28 @@ struct RelId {
     id: i32,
 }
 
+#[derive(Deserialize)]
+struct PostRelationBody {
+    pub id: Id,
+    pub individual_1_id: Id,
+    pub individual_2_id: Id,
+    pub relationship_type: RelType,
+    pub individual_1_role: Role,
+}
+
 #[post("/relationships")]
 async fn create_relationship(
     app_state: web::Data<AppState<'_>>,
-    relationship: web::Json<Relationship>,
+    relationship: web::Json<PostRelationBody>,
 ) -> Result<impl Responder, AppError> {
-    let relationship = relationship.into_inner();
+    let r = relationship.into_inner();
+    let relationship = Relationship::new(
+        r.id,
+        r.individual_1_id,
+        r.individual_2_id,
+        r.relationship_type,
+        r.individual_1_role,
+    );
 
     let query_res = app_state
         .context
@@ -34,18 +53,42 @@ async fn create_relationship(
     Ok(HttpResponse::Created().json(rel_id))
 }
 
-#[get("/tree/{family_id}")]
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct FamTreeWithInfo {
+    relations: Vec<FamTree>,
+    infos: Vec<IndividualBaseInfo>,
+    root_id: String,
+}
+
+#[get("/tree/{username}")]
 async fn get_family_tree(
-    family_id: web::Path<i32>,
+    username: web::Path<String>,
     app_state: web::Data<AppState<'_>>,
 ) -> Result<HttpResponse, AppError> {
-    let fam_tree = app_state
+    let (fam_id, root_id): (i32, i32) = app_state
         .context
-        .relationships
-        .get_family_as_relationships(family_id.into_inner())
+        .families
+        .get_family_id_by_author(username.into_inner())
         .await?;
 
-    Ok(HttpResponse::Ok().json(fam_tree))
+    let relations = app_state
+        .context
+        .relationships
+        .get_family_as_relationships(fam_id)
+        .await?;
+
+    let infos = app_state
+        .context
+        .individuals
+        .get_base_info_ind_in_family(fam_id)
+        .await?;
+
+    Ok(HttpResponse::Ok().json(FamTreeWithInfo {
+        relations,
+        infos,
+        root_id: root_id.to_string(),
+    }))
 }
 
 #[put("/relationships")]

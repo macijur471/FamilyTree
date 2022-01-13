@@ -37,4 +37,5 @@ RUN apt-get update \
 
 WORKDIR app
 COPY --from=builder /app/target/release/api /usr/local/bin
+COPY api/openapi.yaml /srv/api/openapi.yaml
 ENTRYPOINT ["/usr/local/bin/api"]

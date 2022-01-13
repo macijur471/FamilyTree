@@ -1,10 +1,10 @@
-INSERT INTO Individuals(first_name, last_name, date_of_birth) values
-('Son', 'Test1', '2000-02-15'),
-('Dad', 'Test1', '1976-10-21'),
-('Mom', 'Test', '1979-01-03'),
-('MomsDad', 'Test', '1941-05-13');
+INSERT INTO Individuals(names, hometown, date_of_birth, gender) values
+('Son Test1', 'Danville', '2000-02-15', 'male'),
+('Dad Test1', 'Danville', '1976-10-21', 'male'),
+('Mom Test', 'Danville', '1979-01-03', 'female'),
+('MomsDad Test', 'Oakton', '1941-05-13', 'male');
 
-INSERT INTO families values (1, 4, 'Test');
+INSERT INTO families values (1, 'username', 4, 'Test');
 
 INSERT INTO individualtofamilies values
 (1, 1),

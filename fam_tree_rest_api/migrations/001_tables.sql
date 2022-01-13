@@ -1,13 +1,18 @@
 CREATE TABLE IF NOT EXISTS Individuals (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(60),
-    last_name VARCHAR(60),
-    date_of_birth DATE
+    names TEXT NOT NULL,
+    date_of_birth DATE NOT NULL,
+    date_of_death DATE,
+    gender TEXT NOT NULL,
+    hometown TEXT NOT NULL,
+    job TEXT,
+    hobbies TEXT[]
 );
 
 CREATE TABLE IF NOT EXISTS Families (
     id SERIAL PRIMARY KEY,
-    boss_of_the_family INT REFERENCES Individuals,
+    author_username VARCHAR(60),
+    root_id int UNIQUE NOT NULL,
     family_name VARCHAR(60)
 );
 

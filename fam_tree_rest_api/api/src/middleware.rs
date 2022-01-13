@@ -41,7 +41,8 @@ where
     }
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        if req.path() == "/health" {
+        let path = req.path();
+        if path == "/health" || path == "/docs" {
             return Either::Left(self.service.call(req));
         }
 

@@ -28,6 +28,7 @@ pub struct Database<'r> {
     pub individuals: Arc<Table<'r, Individual>>,
     pub relationships: Arc<Table<'r, Relationship>>,
     pub families: Arc<Table<'r, Family>>,
+    pub health: Arc<PgPool>,
     uri: String,
 }
 
@@ -44,27 +45,23 @@ impl<'r> Database<'r> {
         let individuals: Arc<Table<'_, Individual>> = Arc::from(Table::new(pool.clone()));
         let relationships: Arc<Table<'_, Relationship>> = Arc::from(Table::new(pool.clone()));
         let families: Arc<Table<'_, Family>> = Arc::from(Table::new(pool.clone()));
+        let health: Arc<PgPool> = Arc::from(pool.clone());
 
         Database {
             individuals,
             relationships,
             families,
+            health,
             uri: uri.to_string(),
         }
     }
 
     pub async fn health_check(&self) -> bool {
-        let pool = PgPoolOptions::new()
-            .max_connections(8)
-            .connect(&self.uri)
-            .await
-            .unwrap();
-
         sqlx::query(
             r#"
             SELECT 1"#,
         )
-        .fetch_one(&pool)
+        .fetch_one(&*self.health)
         .await
         .is_ok()
     }
