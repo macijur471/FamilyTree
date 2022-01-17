@@ -10,6 +10,7 @@ import IconButton from "components/shared/IconButton";
 import { ReactComponent as AddIcon } from "images/addItem.svg";
 import { ReactComponent as DeleteIcon } from "images/deleteItem.svg";
 import Input from "components/shared/Input";
+import { AddPersonInputs as Inputs } from "utils/types/addPersonInputs.type";
 import { REQUIRED_MSSG } from "utils/formConsts/userForm.consts";
 import {
   HOBBY_MIN_LENGTH,
@@ -17,15 +18,6 @@ import {
   HOBBY_MAX_LENGTH,
   HOBBY_MAX_LENGTH_MSSG,
 } from "utils/formConsts/addPersonForm.consts";
-
-type Inputs = {
-  fullName: string;
-  hometown: string;
-  dateOfBirth: string;
-  dateOfDeath: string;
-  job?: string;
-  hobbies: { name: string }[];
-};
 
 interface Props {
   fields: FieldArrayWithId<Inputs, "hobbies", "id">[];

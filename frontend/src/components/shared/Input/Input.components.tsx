@@ -41,6 +41,16 @@ export const InputElement = styled.input`
   &:focus + div::after {
     transform: scaleX(1);
   }
+
+  filter: none;
+
+  &:autofill {
+    background-color: ${({ theme }) => theme.colors.input.bg};
+  }
+
+  input:-webkit-autofill {
+    background-color: ${({ theme }) => theme.colors.input.bg};
+  }
 `;
 
 export const InputUnderline = styled.div<{ themeColor: "light" | "dark" }>`

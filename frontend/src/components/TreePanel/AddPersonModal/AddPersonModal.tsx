@@ -31,6 +31,11 @@ import HobbiesList from "./HobbiesList";
 import RelationSelect from "./RelationSelect";
 import ImagesInput from "./ImagesInput";
 import { relOptionsT } from "utils/types/relationOptions.type";
+import axios from "axios";
+import { PERSON_URL } from "utils/tree.routes";
+import GenderSelect from "./GenderSelect";
+import { AddPersonInputs as Inputs } from "utils/types/addPersonInputs.type";
+import { useTreeContext } from "context/TreeContext/useTreeContext";
 
 interface Props {
   close?: () => void | Promise<void>;
@@ -47,18 +52,9 @@ const relOptions: relOptionsT[] = [
   "Divorced",
 ];
 
-type Inputs = {
-  fullName: string;
-  hometown: string;
-  dateOfBirth: string;
-  dateOfDeath: string;
-  job?: string;
-  hobbies: { name: string }[];
-  relation?: relOptionsT;
-  images?: FileList;
-};
-
 const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
+  const { getTree } = useTreeContext();
+
   const {
     register,
     control,
@@ -90,7 +86,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
           })
       : [];
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     //check if birth is before death
     if (new Date(data.dateOfBirth) > new Date(data.dateOfDeath)) {
       setError(
@@ -101,6 +97,38 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
       return;
     }
     console.log(data);
+
+    let person: { [k: string]: any } = {
+      names: data.fullName,
+      date_of_birth: data.dateOfBirth,
+      gender: data.gender,
+      hometown: data.hometown,
+    };
+
+    //if date of death is specified
+    if (data.dateOfDeath) person.date_of_death = data.dateOfDeath;
+
+    //if job is specified
+    if (data.dateOfDeath) person.job = data.job;
+
+    //if it's not the tree first person
+    if (data.relation) {
+      person.relative = sourcePerson?.fullName;
+      person.relation = data.relation;
+    }
+    console.log(person);
+
+    try {
+      const res = await axios.post(PERSON_URL, person);
+      console.log(res);
+
+      if (res?.status === 201) {
+        await getTree();
+        if (close) close();
+      }
+    } catch (e) {
+      if (!(e instanceof Error) || !e) return;
+    }
   };
 
   return (
@@ -130,6 +158,7 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
             },
           })}
         />
+        <GenderSelect register={register("gender")} />
         <Input
           theme="dark"
           label="Hometown"

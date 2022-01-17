@@ -1,9 +1,9 @@
+import React, { FunctionComponent } from "react";
 import {
   InputError,
   InputLabel,
 } from "components/shared/Input/Input.components";
 import Select from "components/shared/Select";
-import React, { FunctionComponent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import {
   RelationDescription,

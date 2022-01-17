@@ -7,6 +7,7 @@ type TreeContextT = {
   peopleData: peopleDataT[];
   rootId: string;
   setRootId: Dispatch<SetStateAction<string>>;
+  getTree: () => Promise<void> | void;
 };
 
 export const TreeContext = createContext<TreeContextT>({
@@ -14,4 +15,5 @@ export const TreeContext = createContext<TreeContextT>({
   peopleData: [],
   rootId: "",
   setRootId: () => {},
+  getTree: () => {},
 });
