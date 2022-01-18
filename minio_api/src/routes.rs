@@ -10,6 +10,7 @@ async fn insert_image(bucket: web::Data<Bucket>, image_data: web::Json<ImgData>)
     let key = (&image_data.individual_id).to_string();
     let uri = (&image_data.img_uri).to_string();
     let path = Path::new(&uri);
+    println!("{:?}", path);
     if path.exists() {
         let img = std::fs::read(path).unwrap();
         bucket

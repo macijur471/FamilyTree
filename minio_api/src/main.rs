@@ -19,7 +19,7 @@ async fn main() ->Result<(), Box<dyn Error>>{
         &nm,
         Region::Custom {
             region: "".to_owned(),
-            endpoint: std::env::var("MINIO_PORT").unwrap_or_else(|_| "http://0.0.0.0:9000".to_string()).to_owned(),
+            endpoint: std::env::var("MINIO_URL").unwrap_or_else(|_| "http://0.0.0.0:9000".to_string()).to_owned(),
         },
         Credentials {
             access_key: Some(std::env::var("MINIO_ACCESS_KEY").unwrap().to_string()),
@@ -48,7 +48,7 @@ async fn main() ->Result<(), Box<dyn Error>>{
         App::new()
             .wrap(middleware::Logger::default())
             .data(bucket.clone())
-            .service(web::scope("/minio").configure(routes::init_routes))
+            .service(web::scope("").configure(routes::init_routes))
     })
         .bind(&url)?
         .run()
