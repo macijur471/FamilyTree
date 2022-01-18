@@ -12,6 +12,12 @@ Rust Dockerfiles use docker buildkit, so it has to be set as env variable `DOCKE
 export DOCKER_BUILDKIT=1
 #+END_EXAMPLE
 
+Tagging built images uses variable below
+#+BEGIN_EXAMPLE
+export IMAGE_REG=famtree.azurecr.io/family-tre
+#+END_EXAMPLE
+
+
 *You have to be in a root directory of the project, in order for the context to be correct.*
 
 Build provided images and start services with one command.
@@ -121,9 +127,9 @@ Interactive documentation of the api can be found at [http://{host}:{port}/api/d
 + visualization
 + dragging elements
 + multimedia attachments (mostly images)
-+ recognizing different relations between indiviuals
++ +recognizing different relations between indiviuals+
 + time frame of the relationship
-+ biographical informations
++ +biographical informations+
 + a posibility to export the tree to HTML, PDF
 + read/write the tree from/to json
 + +persistent trees, with the help of a database+

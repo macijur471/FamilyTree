@@ -502,6 +502,7 @@ version = "0.1.0"
 dependencies = [
  "actix-files",
  "actix-web 4.0.0-beta.16",
+ "anyhow",
  "chrono",
  "config",
  "env_logger",

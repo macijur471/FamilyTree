@@ -7,6 +7,5 @@ use super::Id;
 pub struct Families {
     pub id: Id,
     pub author_username: String,
-    pub root_id: Id,
-    pub family_name: String,
+    pub root_id: i32,
 }

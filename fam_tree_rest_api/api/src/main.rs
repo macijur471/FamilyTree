@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
     let app = HttpServer::new(move || {
         App::new()
             .wrap(AuthMiddlewareFactory)
-            .wrap(middleware::DefaultHeaders::new().header("Content-Type", "application/json"))
+            .wrap(middleware::DefaultHeaders::new().add(("Content-Type", "application/json")))
             .wrap(middleware::Logger::default())
             .wrap(middleware::NormalizePath::new(
                 middleware::TrailingSlash::Trim,

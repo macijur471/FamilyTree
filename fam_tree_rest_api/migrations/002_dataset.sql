@@ -4,7 +4,7 @@ INSERT INTO Individuals(names, hometown, date_of_birth, gender) values
 ('Mom Test', 'Danville', '1979-01-03', 'female'),
 ('MomsDad Test', 'Oakton', '1941-05-13', 'male');
 
-INSERT INTO families values (1, 'username', 4, 'Test');
+INSERT INTO families(author_username, root_id) values ('username', 4);
 
 INSERT INTO individualtofamilies values
 (1, 1),

@@ -1,3 +1,5 @@
+use std::any;
+
 use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use serde::Serialize;
 use sqlx::Error as SqlError;
@@ -23,6 +25,16 @@ impl AppError {
             Self::Unavailabe => "Unavailable".to_string(),
             Self::Unknown => "Unknown".to_string(),
         }
+    }
+
+    pub fn message(code: u16, message: String) -> HttpResponse {
+        let response = ErrorResponse {
+            code,
+            message,
+            error: "true".to_string(),
+        };
+
+        HttpResponse::build(StatusCode::from_u16(code).unwrap()).json(response)
     }
 }
 
@@ -56,6 +68,12 @@ impl From<SqlError> for AppError {
             }
             _ => AppError::NotFound,
         }
+    }
+}
+
+impl From<anyhow::Error> for AppError {
+    fn from(error: anyhow::Error) -> AppError {
+        AppError::Unknown
     }
 }
 

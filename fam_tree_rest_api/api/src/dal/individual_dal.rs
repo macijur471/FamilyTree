@@ -39,10 +39,14 @@ impl Table<'_, Individual> {
             .collect())
     }
 
-    pub async fn create_individual(&self, individual: &Individual) -> Result<i32, sqlx::Error> {
+    pub async fn create_individual(
+        &self,
+        individual: &Individual,
+    ) -> Result<(i32, sqlx::Transaction<'_, sqlx::Postgres>), sqlx::Error> {
+        let mut transaction = self.pool.begin().await?;
         let id = sqlx::query(
             r#"
-            INSERT INTO Individuals (names, gender, date_of_birth, date_of_death, hometown, hobbies, job)
+            INSERT INTO individuals (names, gender, date_of_birth, date_of_death, hometown, hobbies, job)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING id"#,
         )
@@ -53,11 +57,15 @@ impl Table<'_, Individual> {
         .bind(&individual.hometown)
         .bind(&individual.hobbies)
         .bind(&individual.job)
-        .fetch_one(&*self.pool)
+        .fetch_one(&mut transaction)
         .await;
 
-        id.map_err(|e| debug!("{:?}", e)).unwrap().try_get(0)
-        //tmp.try_get(0)
+        let id = id
+            .map_err(|e| debug!("{:?}", e))
+            .unwrap()
+            .try_get(0)
+            .unwrap();
+        Ok((id, transaction))
     }
 
     pub async fn update_individual(

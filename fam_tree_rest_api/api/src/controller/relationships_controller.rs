@@ -66,12 +66,23 @@ async fn get_family_tree(
     username: web::Path<String>,
     app_state: web::Data<AppState<'_>>,
 ) -> Result<HttpResponse, AppError> {
-    let (fam_id, root_id): (i32, i32) = app_state
+    let res = app_state
         .context
         .families
         .get_family_id_by_author(username.into_inner())
-        .await?;
+        .await;
 
+    match res {
+        Ok(x) => x,
+        Err(e) => {
+            return Ok(AppError::message(
+                404,
+                String::from("There is not such a tree in our database"),
+            ))
+        }
+    };
+
+    let (fam_id, root_id): (i32, i32) = res.unwrap();
     let relations = app_state
         .context
         .relationships

@@ -11,9 +11,8 @@ CREATE TABLE IF NOT EXISTS Individuals (
 
 CREATE TABLE IF NOT EXISTS Families (
     id SERIAL PRIMARY KEY,
-    author_username VARCHAR(60),
-    root_id int UNIQUE NOT NULL,
-    family_name VARCHAR(60)
+    author_username VARCHAR(60) UNIQUE NOT NULL,
+    root_id int UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS IndividualToFamilies (

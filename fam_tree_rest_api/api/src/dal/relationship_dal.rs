@@ -95,4 +95,18 @@ impl Table<'_, Relationship> {
         println!("{:?}", x);
         x
     }
+
+    pub async fn delete_relation_for_individual_x(
+        &self,
+        ind_id: i32,
+    ) -> Result<PgQueryResult, sqlx::Error> {
+        sqlx::query(
+            r#"
+            DELETE FROM relationships where individual_1_id = $1 or individual_2_id = $1
+            "#,
+        )
+        .bind(ind_id)
+        .execute(&*self.pool)
+        .await
+    }
 }

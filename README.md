@@ -1,24 +1,24 @@
 
 # Table of Contents
 
-1.  [Family Tree IO Project](#org09f5083)
-    1.  [usage](#org1f9838b)
-    2.  [development](#org6314400)
-    3.  [testing](#org706e908)
-    4.  [api documentation](#org171b4f1)
-    5.  [Technologies](#org1152ff0)
-    6.  [TODO](#org98fe16b)
+1.  [Family Tree IO Project](#orgb444618)
+    1.  [usage](#orgaa318bf)
+    2.  [development](#org0fcebba)
+    3.  [testing](#org922db58)
+    4.  [api documentation](#org666be17)
+    5.  [Technologies](#orgb299980)
+    6.  [TODO](#org12234c2)
 
 
 
-<a id="org09f5083"></a>
+<a id="orgb444618"></a>
 
 # Family Tree IO Project
 
 A feature-rich web application that <del>is</del> will be designed for creating family trees. <del>User-friendly ui design with many functionalities</del>.
 
 
-<a id="org1f9838b"></a>
+<a id="orgaa318bf"></a>
 
 ## usage
 
@@ -27,6 +27,10 @@ Below is an instruction how to set up an environment for local development. I ca
 Rust Dockerfiles use docker buildkit, so it has to be set as env variable \`DOCKER<sub>BUILDKIT</sub>\`
 
     export DOCKER_BUILDKIT=1
+
+Tagging built images uses variable below
+
+    export IMAGE_REG=famtree.azurecr.io/family-tre
 
 **You have to be in a root directory of the project, in order for the context to be correct.**
 
@@ -57,7 +61,7 @@ Assuming the builds haven&rsquo;t failed, check whether neccessary containers/se
     -   Create a ticket on clickup with an explanation of the situation (maybe error trace from logs)
 
 
-<a id="org6314400"></a>
+<a id="org0fcebba"></a>
 
 ## development
 
@@ -76,7 +80,7 @@ Currently paths for specific services are also presented on the diagram below
 ![img](./media/Paths.drawio.svg)
 
 
-<a id="org706e908"></a>
+<a id="org922db58"></a>
 
 ## testing
 
@@ -108,14 +112,14 @@ Location of the tests - <./integration_tests>
             --use-running-containers
 
 
-<a id="org171b4f1"></a>
+<a id="org666be17"></a>
 
 ## api documentation
 
 Interactive documentation of the api can be found at [<http://{host}:{port}/api/docs>](<http://localhost/api/docs>)
 
 
-<a id="org1152ff0"></a>
+<a id="orgb299980"></a>
 
 ## Technologies
 
@@ -160,7 +164,7 @@ Interactive documentation of the api can be found at [<http://{host}:{port}/api/
     -   cypress
 
 
-<a id="org98fe16b"></a>
+<a id="org12234c2"></a>
 
 ## TODO
 
@@ -171,9 +175,9 @@ Interactive documentation of the api can be found at [<http://{host}:{port}/api/
 -   visualization
 -   dragging elements
 -   multimedia attachments (mostly images)
--   recognizing different relations between indiviuals
+-   <del>recognizing different relations between indiviuals</del>
 -   time frame of the relationship
--   biographical informations
+-   <del>biographical informations</del>
 -   a posibility to export the tree to HTML, PDF
 -   read/write the tree from/to json
 -   <del>persistent trees, with the help of a database</del>
