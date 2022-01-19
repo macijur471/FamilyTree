@@ -24,7 +24,9 @@ const Select: FunctionComponent<Props> = ({
     <SelectWrapper>
       <SelectElement id={name} {...register}>
         {options.map((o) => (
-          <SelectOption key={o}>{o}</SelectOption>
+          <SelectOption key={o} value={o.toLocaleLowerCase()}>
+            {o}
+          </SelectOption>
         ))}
       </SelectElement>
       <SelectUnderline themeColor={theme} />

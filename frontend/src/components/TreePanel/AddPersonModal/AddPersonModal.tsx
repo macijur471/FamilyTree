@@ -36,24 +36,29 @@ import { PERSON_URL } from "utils/tree.routes";
 import GenderSelect from "./GenderSelect";
 import { AddPersonInputs as Inputs } from "utils/types/addPersonInputs.type";
 import { useTreeContext } from "context/TreeContext/useTreeContext";
+import { useUserContext } from "context/UserContext/useUserContext";
+import { relationToStr } from "utils/functions/relationToStr";
+import { roleToStr } from "utils/functions/roleToStr";
 
 interface Props {
   close?: () => void | Promise<void>;
-  sourcePerson?: { fullName: string; dateOfBirth: string };
+  sourcePerson?: { fullName: string; dateOfBirth: string; id: string };
 }
 
-const relOptions: relOptionsT[] = [
+const relOptions = [
   "Parent",
   "Child",
   "Sibling",
-  "Adopted child",
   "Adopted parent",
+  "Adopted child",
+  "Adopted sibling",
   "Spouse",
   "Divorced",
 ];
 
 const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
   const { getTree } = useTreeContext();
+  const { username } = useUserContext();
 
   const {
     register,
@@ -96,7 +101,6 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
       );
       return;
     }
-    console.log(data);
 
     let person: { [k: string]: any } = {
       names: data.fullName,
@@ -113,14 +117,14 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
 
     //if it's not the tree first person
     if (data.relation) {
-      person.relative = sourcePerson?.fullName;
-      person.relation = data.relation;
+      person.relative = sourcePerson?.id;
+      person.relation = relationToStr(data.relation);
+      person.role = roleToStr(data.relation);
     }
     console.log(person);
 
     try {
-      const res = await axios.post(PERSON_URL, person);
-      console.log(res);
+      const res = await axios.post(`${PERSON_URL}/${username}`, person);
 
       if (res?.status === 201) {
         await getTree();
@@ -223,21 +227,23 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
             register={register("relation", {
               validate: (relation) => {
                 switch (relation) {
-                  case "Parent":
-                  case "Adopted parent": {
+                  case "parent":
+                  case "adopted parent": {
+                    console.log(Date.parse(sourcePerson.dateOfBirth));
+
                     if (
-                      new Date(sourcePerson.dateOfBirth) <=
-                        new Date(watchBirthDate) ||
+                      Date.parse(sourcePerson.dateOfBirth) <=
+                        Date.parse(watchBirthDate) ||
                       watchBirthDate === ""
                     )
                       return `This person cannot be ${sourcePerson.fullName}'s parent!`;
                     return true;
                   }
-                  case "Child":
-                  case "Adopted child": {
+                  case "child":
+                  case "adopted child": {
                     if (
-                      new Date(sourcePerson.dateOfBirth) >=
-                        new Date(watchBirthDate) ||
+                      Date.parse(sourcePerson.dateOfBirth) >=
+                        Date.parse(watchBirthDate) ||
                       watchBirthDate === ""
                     )
                       return `This person cannot be ${sourcePerson.fullName}'s child!`;

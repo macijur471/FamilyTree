@@ -37,8 +37,10 @@ const PersonTile: FunctionComponent<Props> = ({
   node,
   style,
   onSubClick,
+  id,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <>
       <PersonTileWrapper style={style}>
@@ -64,7 +66,7 @@ const PersonTile: FunctionComponent<Props> = ({
       {isModalVisible && (
         <AddPersonModal
           close={() => setIsModalVisible(false)}
-          sourcePerson={{ fullName: name, dateOfBirth: birthDate }}
+          sourcePerson={{ fullName: name, dateOfBirth: birthDate, id: id }}
         />
       )}
     </>

@@ -1,8 +1,9 @@
 export type relOptionsT =
-  | "Parent"
-  | "Child"
-  | "Sibling"
-  | "Adopted child"
-  | "Adopted parent"
-  | "Spouse"
-  | "Divorced";
+  | "parent"
+  | "child"
+  | "sibling"
+  | "adopted child"
+  | "adopted sibling"
+  | "adopted parent"
+  | "spouse"
+  | "divorced";

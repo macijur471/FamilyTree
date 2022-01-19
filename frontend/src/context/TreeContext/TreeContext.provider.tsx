@@ -32,6 +32,15 @@ const TreeContextProvider: FunctionComponent = ({ children }) => {
         imgUrl: "",
       }));
       setPeopleData(pData);
+      setRootId(res.data.rootId);
+
+      // const relations = res.data.relations.map((item) => {
+      //   if (item.gender === "female") return { ...item, gender: 1 };
+      //   else return { ...item, gender: 0 };
+      // });
+      // @ts-ignore
+      // setPeopleNodes(relations);
+
       // @ts-ignore
       setPeopleNodes(res.data.relations);
     } catch (e) {
