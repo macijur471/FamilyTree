@@ -19,6 +19,7 @@ export const ModalWrapper = styled.div`
 export const ModalInnerWrapper = styled.div<{
   bg: keyof ThemeType["colors"]["modal"]["bg"];
   column?: boolean;
+  small?: boolean;
 }>`
   ${({ column }) => column && columnDiv}
 
@@ -29,7 +30,7 @@ export const ModalInnerWrapper = styled.div<{
   position: relative;
 
   width: 700px;
-  height: 100%;
+  height: ${({ small }) => !small && "100%"};
 
   padding: 50px;
 

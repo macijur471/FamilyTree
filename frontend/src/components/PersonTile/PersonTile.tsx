@@ -17,6 +17,7 @@ import { ReactComponent as AddIcon } from "images/addUser.svg";
 import { ReactComponent as DotsIcon } from "images/subtree.svg";
 import IconButton from "components/shared/IconButton";
 import AddPersonModal from "components/TreePanel/AddPersonModal";
+import { useDrag } from "react-dnd";
 
 interface Props {
   name: string;
@@ -39,12 +40,19 @@ const PersonTile: FunctionComponent<Props> = ({
   onSubClick,
   id,
 }) => {
+  const [, drag] = useDrag(() => ({
+    type: "person",
+    item: { id, name },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
     <>
       <PersonTileWrapper style={style}>
-        <Tile text={name} bg={gender}>
+        <Tile text={name} bg={gender} ref={drag}>
           <PersonTileBirthDate>{birthDate}</PersonTileBirthDate>
           <PersonTileImgWrapper>
             {imgUrl && <PersonTileImage src={imgUrl} />}

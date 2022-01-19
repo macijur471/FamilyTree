@@ -1,9 +1,10 @@
-import Modal from "components/shared/Modal";
 import React, { FunctionComponent } from "react";
+import Modal from "components/shared/Modal";
 import {
   PrivacyPolicyHeader,
   PrivacyPolicySubheader,
   PrivacyPolicyText,
+  PrivacyPolicyUList,
 } from "./PrivacyPolicyModal.components";
 
 interface Props {
@@ -30,29 +31,30 @@ const PrivacyPolicyModal: FunctionComponent<Props> = ({ close }) => {
       <PrivacyPolicyText>
         Service user decide which data submit to system. Although some of them
         are necessary to provide client with the service.
-        <ul>
-          <li>Username</li>
-          <li>Password (hashed for greater security)</li>
-          <li>
-            Family members':
-            <ul>
-              <li>names</li>
-              <li>hometowns</li>
-              <li>genders</li>
-              <li>jobs</li>
-              <li>hobbies</li>
-              <li>images</li>
-              <li>relationships</li>
-              <li>dates of birth</li>
-              <li>dates of death</li>
-            </ul>
-          </li>
-        </ul>
+        <br />
+        <br />
         All collected data are used only for creating personal family tree. No
         one else will have permission to access user data. Data are not
         disclosed to third parties.
       </PrivacyPolicyText>
-
+      <PrivacyPolicyUList>
+        <li>Username</li>
+        <li>Password (hashed for greater security)</li>
+        <li>
+          Family members':
+          <ul>
+            <li>names</li>
+            <li>hometowns</li>
+            <li>genders</li>
+            <li>jobs</li>
+            <li>hobbies</li>
+            <li>images</li>
+            <li>relationships</li>
+            <li>dates of birth</li>
+            <li>dates of death</li>
+          </ul>
+        </li>
+      </PrivacyPolicyUList>
       <PrivacyPolicySubheader>Managing data</PrivacyPolicySubheader>
       <PrivacyPolicyText>
         User have full access to own date inserted to the system. User can

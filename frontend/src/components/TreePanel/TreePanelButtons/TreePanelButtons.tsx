@@ -15,7 +15,9 @@ const TreePanelButtons: FunctionComponent = () => {
       <IconButton
         color="blue"
         icon={<LogoutIcon />}
-        onClick={() => changeUserContextValue({ isLoggedIn: false })}
+        onClick={() =>
+          changeUserContextValue({ isLoggedIn: false, username: undefined })
+        }
       />
     </TreePanelButtonsWrapper>
   );

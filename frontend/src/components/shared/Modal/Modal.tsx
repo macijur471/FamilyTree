@@ -11,6 +11,7 @@ interface Props {
   bgColor?: keyof ThemeType["colors"]["modal"]["bg"];
   close?: () => void | Promise<void>;
   column?: boolean;
+  small?: boolean;
 }
 
 const Modal: FunctionComponent<Props> = ({
@@ -18,10 +19,11 @@ const Modal: FunctionComponent<Props> = ({
   close,
   children,
   column,
+  small,
 }) => {
   return (
     <ModalWrapper data-cy="modal" data-testid="modal">
-      <ModalInnerWrapper bg={bgColor} column={column}>
+      <ModalInnerWrapper bg={bgColor} column={column} small={small}>
         <ModalCloseButton
           bg={bgColor}
           onClick={(e) => {

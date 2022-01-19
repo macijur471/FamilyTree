@@ -16,3 +16,8 @@ export const PrivacyPolicyText = styled.p`
   color: ${({ theme }) => theme.colors.text.light};
   font-family: ${({ theme }) => theme.fonts.families.normal};
 `;
+
+export const PrivacyPolicyUList = styled.ul`
+  color: ${({ theme }) => theme.colors.text.light};
+  font-family: ${({ theme }) => theme.fonts.families.normal};
+`;

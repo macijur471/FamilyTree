@@ -1,4 +1,6 @@
 import { render, screen } from "@testing-library/react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "styles/global.styles";
 import theme from "styles/theme";
@@ -13,18 +15,20 @@ const renderPersonTile = (
   render(
     <>
       <GlobalStyles />
-      <ThemeProvider theme={theme}>
-        <PersonTile
-          name={name}
-          gender={gender}
-          birthDate={birthDate}
-          imgUrl={image}
-          node=""
-          id=""
-          style={{}}
-          onSubClick={() => {}}
-        />
-      </ThemeProvider>
+      <DndProvider backend={HTML5Backend}>
+        <ThemeProvider theme={theme}>
+          <PersonTile
+            name={name}
+            gender={gender}
+            birthDate={birthDate}
+            imgUrl={image}
+            node=""
+            id=""
+            style={{}}
+            onSubClick={() => {}}
+          />
+        </ThemeProvider>
+      </DndProvider>
     </>
   );
   const tile = screen.queryByTestId("tile");

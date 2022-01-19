@@ -7,12 +7,14 @@ interface Props {
   color: keyof ThemeType["colors"]["iconButton"]["theme"];
   onClick?: () => void | Promise<void>;
   disabled?: boolean;
+  optRef?: React.Ref<HTMLButtonElement>;
 }
 
 const IconButton: FunctionComponent<Props> = ({
   icon,
   color,
   onClick,
+  optRef,
   disabled = false,
 }) => {
   return (
@@ -22,6 +24,7 @@ const IconButton: FunctionComponent<Props> = ({
       data-testid="icon-button"
       type="button"
       disabled={disabled}
+      ref={optRef}
     >
       {icon}
     </IconButtonWrapper>

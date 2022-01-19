@@ -30,7 +30,6 @@ import Button from "components/shared/Button";
 import HobbiesList from "./HobbiesList";
 import RelationSelect from "./RelationSelect";
 import ImagesInput from "./ImagesInput";
-import { relOptionsT } from "utils/types/relationOptions.type";
 import axios from "axios";
 import { PERSON_URL } from "utils/tree.routes";
 import GenderSelect from "./GenderSelect";
@@ -121,7 +120,6 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
       person.relation = relationToStr(data.relation);
       person.role = roleToStr(data.relation);
     }
-    console.log(person);
 
     try {
       const res = await axios.post(`${PERSON_URL}/${username}`, person);
@@ -229,8 +227,6 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
                 switch (relation) {
                   case "parent":
                   case "adopted parent": {
-                    console.log(Date.parse(sourcePerson.dateOfBirth));
-
                     if (
                       Date.parse(sourcePerson.dateOfBirth) <=
                         Date.parse(watchBirthDate) ||
