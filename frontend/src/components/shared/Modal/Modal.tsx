@@ -10,16 +10,20 @@ import { ReactComponent as CloseIcon } from "images/close.svg";
 interface Props {
   bgColor?: keyof ThemeType["colors"]["modal"]["bg"];
   close?: () => void | Promise<void>;
+  column?: boolean;
+  small?: boolean;
 }
 
 const Modal: FunctionComponent<Props> = ({
   bgColor = "default",
   close,
   children,
+  column,
+  small,
 }) => {
   return (
     <ModalWrapper data-cy="modal" data-testid="modal">
-      <ModalInnerWrapper bg={bgColor}>
+      <ModalInnerWrapper bg={bgColor} column={column} small={small}>
         <ModalCloseButton
           bg={bgColor}
           onClick={(e) => {

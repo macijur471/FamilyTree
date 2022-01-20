@@ -8,7 +8,7 @@ interface Props {
 }
 
 const BgBar = styled.div<Props>`
-  height: 10px;
+  height: 12px;
   width: ${({ width }) => (width ? `${width}px` : "100%")};
 
   background-color: ${({ theme, color }) => theme.colors.bgbar[color]};

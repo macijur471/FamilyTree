@@ -1,4 +1,6 @@
 import { render, screen } from "@testing-library/react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "styles/global.styles";
 import theme from "styles/theme";
@@ -13,23 +15,25 @@ const renderPersonTile = (
   render(
     <>
       <GlobalStyles />
-      <ThemeProvider theme={theme}>
-        <PersonTile
-          name={name}
-          gender={gender}
-          birthDate={birthDate}
-          imgUrl={image}
-          node=""
-          id=""
-          style={{}}
-          onSubClick={() => {}}
-        />
-      </ThemeProvider>
+      <DndProvider backend={HTML5Backend}>
+        <ThemeProvider theme={theme}>
+          <PersonTile
+            name={name}
+            gender={gender}
+            birthDate={birthDate}
+            imgUrl={image}
+            node=""
+            id=""
+            style={{}}
+            onSubClick={() => {}}
+          />
+        </ThemeProvider>
+      </DndProvider>
     </>
   );
-  const tile = screen.queryByText(name)?.closest("button");
+  const tile = screen.queryByTestId("tile");
   const birthDiv = screen.queryByText(birthDate);
-  const addButton = screen.queryByTestId("add-person-button");
+  const addButton = screen.queryByTestId("icon-button");
   const img = screen.queryByRole("img");
 
   return { tile, addButton, img, birthDiv };
@@ -42,11 +46,6 @@ const mockData: [string, "male" | "female", string] = [
 ];
 
 describe("Person tile", () => {
-  it("renders as a button", () => {
-    const { tile } = renderPersonTile(...mockData);
-    expect(tile).toBeInTheDocument();
-  });
-
   it("has add person button", () => {
     const { addButton } = renderPersonTile(...mockData);
     expect(addButton).toBeInTheDocument();

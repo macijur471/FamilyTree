@@ -24,3 +24,20 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "@testing-library/cypress/add-commands";
+Cypress.Commands.add("fakeLogin", () => {
+  cy.visit("/");
+  cy.intercept(
+    { method: "POST", url: "http://localhost/api/v1/auth/user/login" },
+    {
+      body: {
+        message: "succsefully logged in",
+        status: true,
+      },
+    }
+  ).as("logIn");
+  cy.findByPlaceholderText(/username/i).type("testtest");
+  cy.findByPlaceholderText(/password/i).type("testtest");
+  cy.findByRole("form").within(() => {
+    cy.findByRole("button").click();
+  });
+});

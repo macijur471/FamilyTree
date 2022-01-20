@@ -58,7 +58,7 @@ const UserForm: FunctionComponent = () => {
 
       axios.defaults.headers.common[
         "Authorization"
-      ] = `Bearer: ${res.data.token}`;
+      ] = `Bearer ${res.data.token}`;
 
       changeUserContextValue({
         username: data.username,

@@ -38,20 +38,25 @@ const theme = {
     input: {
       bg: "#FFFFFF",
       underlineColor: "var(--med-blue)",
-      underlineActiveColor: "var(--red)",
       placeholderColor: "var(--med-blue)",
       textColor: "var(--almost-black)",
+      light: {
+        underlineActiveColor: "var(--red)",
+      },
+      dark: {
+        underlineActiveColor: "var(--lime)",
+      },
     },
     button: {
-      textColor: "#FFFFFF",
-      bg: "var(--red)",
-      hoveredBg: "var(--dark-red)",
+      textColor: { red: "#FFFFFF", green: "var(--dark-blue)" },
+      bg: { red: "var(--red)", green: "var(--lime)" },
+      hoveredBg: { red: "var(--dark-red)", green: "var(--dark-lime)" },
     },
     modal: {
       bg: {
         male: "var(--turqoise)",
         female: "var(--red)",
-        default: "var(--med-blue)",
+        default: "var(--light-blue)",
       },
     },
     personTile: {
@@ -79,12 +84,12 @@ const theme = {
         red: {
           bg: "var(--dark-red)",
           hoveredBg: "var(--v-dark-red)",
-          fill: "var(--orange)",
+          fill: "var(--yellow)",
         },
         blue: {
           bg: "var(--light-blue)",
           hoveredBg: "var(--med-blue)",
-          fill: "var(--orange)",
+          fill: "var(--yellow)",
         },
         orange: {
           bg: "var(--orange)",
@@ -93,9 +98,22 @@ const theme = {
         },
       },
     },
+    tree: {
+      scrollbarTrack: "var(--med-blue)",
+      scrollbarThumb: "var(--yellow)",
+      scrollbarThumbActive: "var(--orange)",
+    },
+    addPersonModal: {
+      imagesInputBg: "var(--yellow)",
+      imagesInputBgHover: "var(--lime)",
+    },
   },
   heights: {
     header: "var(--header-height)",
+    treeButtons: "var(--tree-buttons-height)",
+  },
+  paddings: {
+    treeWrapper: "var(--tree-wrapper-padding)",
   },
   borders: { thick: "8px", thin: "4px" },
 };

@@ -43,13 +43,21 @@ export const IconButtonWrapper = styled.button<{
     transition: transform 0.2s ease-out;
   }
 
-  &:hover::after,
-  &:focus::after {
+  &:not(:disabled):hover::after,
+  &:not(:disabled):focus::after {
     transform: scale(1);
   }
 
   &:hover svg,
   &:focus svg {
     transform: scale(0.8);
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.iconButton.disabledBg};
+
+    svg {
+      fill: ${({ theme }) => theme.colors.iconButton.disabledFill};
+    }
   }
 `;
