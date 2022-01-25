@@ -29,7 +29,6 @@ pub struct Database<'r> {
     pub relationships: Arc<Table<'r, Relationship>>,
     pub families: Arc<Table<'r, Family>>,
     pub health: Arc<PgPool>,
-    uri: String,
 }
 
 impl<'r> Database<'r> {
@@ -52,7 +51,6 @@ impl<'r> Database<'r> {
             relationships,
             families,
             health,
-            uri: uri.to_string(),
         }
     }
 

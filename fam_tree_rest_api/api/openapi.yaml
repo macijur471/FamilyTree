@@ -56,6 +56,34 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /individuals/{id}:
+    get:
+      summary: 'Returns requested individual if exists'
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the individual to be deleted
+      operationId: getIndividual
+      tags:
+        - individuals
+      responses:
+        '200':
+          description: 'Return detailed information of an individual'
+          content:
+            application/json:
+              schema:
+                type: object 
+                $ref: '#/components/schemas/Individual'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Delete an individual
       parameters:
@@ -379,15 +407,19 @@ components:
                 type: string
               job:
                 type: string
-              relative:
-                type: string
-              relation:
-                type: string
-                $ref: "#/components/schemas/RelType"
-              role:
-                type: string
-                $ref: "#/components/schemas/Role"
-
+              relatives:
+                type: array 
+                items:
+                  type: object
+                  properties:
+                    relative: 
+                      type: string
+                    relation: 
+                      type: string
+                      $ref: "#/components/schemas/RelType"
+                    role:
+                      type: string
+                      $ref: "#/components/schemas/Role"
 
 security:
   - BearerAuth: []

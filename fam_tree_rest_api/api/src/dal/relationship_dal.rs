@@ -1,4 +1,5 @@
 use super::{FamTree, Id, Relationship, Table};
+use log::debug;
 use sqlx::postgres::PgQueryResult;
 use sqlx::Row;
 
@@ -31,6 +32,19 @@ impl Table<'_, Relationship> {
         .await
         .unwrap()
         .try_get(0)
+    }
+
+    pub async fn create_relationship_many(
+        &self,
+        relationships: &Vec<Relationship>,
+    ) -> Vec<Result<i32, sqlx::Error>> {
+        let mut ids = Vec::with_capacity(relationships.len());
+        for rel in relationships.iter() {
+            debug!("{:?}", rel);
+            ids.push(self.create_relationship(rel).await);
+        }
+
+        ids
     }
 
     pub async fn get_relationships_all(&self) -> Result<Vec<Relationship>, sqlx::Error> {

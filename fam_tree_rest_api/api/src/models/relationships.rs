@@ -3,7 +3,7 @@ use sqlx::FromRow;
 
 use super::Id;
 
-#[derive(sqlx::Type, Deserialize, Serialize, Debug, Clone)]
+#[derive(sqlx::Type, Deserialize, Serialize, Debug, Clone, Copy)]
 #[sqlx(type_name = "role", rename_all = "lowercase")]
 #[serde(rename_all = "lowercase")]
 pub enum Role {

@@ -17,6 +17,21 @@ impl Table<'_, Individual> {
         .await
     }
 
+    pub async fn get_individual_by_id(&self, id: i32) -> Result<Individual, sqlx::Error> {
+        let ind = sqlx::query_as(
+            r#"
+            SELECT *
+            FROM individuals
+            WHERE id=$1"#,
+        )
+        .bind(id)
+        .fetch_one(&*self.pool)
+        .await;
+
+        debug!("{:?}", ind);
+        ind
+    }
+
     pub async fn get_base_info_ind_in_family(
         &self,
         family_id: i32,

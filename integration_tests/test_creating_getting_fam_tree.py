@@ -3,17 +3,11 @@ from integration_tests.conftest import create_auth_header
 import json
 from faker import Faker
 
-class Individual:
+class Relative:
     faker = Faker()
     Faker.seed(0)
 
-    def __init__(self, name, dob, gender, hometown, dod=None, job=None, relative=None, relation=None, role=None):
-        self.names = name
-        self.date_of_birth = dob
-        self.date_of_death = dod
-        self.gender = gender
-        self.hometown = hometown
-        self.job = job
+    def __init__(self, relative, relation, role):
         self.relative = relative
         self.relation = relation
         self.role = role
@@ -23,22 +17,40 @@ class Individual:
                       default=lambda o: dict((key, value) for key, value in o.__dict__.items() if value),
                       indent=4,
                       allow_nan=False)
+    
+    @staticmethod
+    def fake(relatives, roles):
+        return [ Relative( relative = relatives[i], relation = Relative.faker.random_element(elements=('blood', 'adopted')), role = roles[i]) for i in range(len(relatives)) ]
+class Individual:
+    faker = Faker()
+    Faker.seed(0)
+
+    def __init__(self, name, dob, gender, hometown, dod=None, job=None, relatives=None):
+        self.names = name
+        self.date_of_birth = dob
+        self.date_of_death = dod
+        self.gender = gender
+        self.hometown = hometown
+        self.job = job
+        self.relatives = relatives if relatives is not None else None 
+
+    def to_json(self):
+        print(self.__dict__)
+        return json.dumps(self,
+                      default=lambda o: dict((key, value) for key, value in o.__dict__.items() if value or type(value)==list),
+                      indent=4,
+                      allow_nan=False)
 
     @staticmethod
-    def fake(relative=None, role=None):
+    def fake(relatives=None):
         ind = Individual(
                 Individual.faker.name(),
                 Individual.faker.date(),
                 Individual.faker.random_element(elements=('male', 'female')),
                 Individual.faker.city(),
-                job=Individual.faker.job()
+                job=Individual.faker.job(),
+                relatives=relatives if relatives is not None else []
             )
-
-        if relative is not None\
-            and role is not None:
-            ind.relative = relative
-            ind.relation = Individual.faker.random_element(elements=('blood', 'adopted'))
-            ind.role = role
         return ind
 
     @staticmethod
@@ -58,17 +70,19 @@ class TestIndividualInFamily:
         genealogy = wait_for_genealogy
         headers = create_auth_header(auth)
         headers['content-type'] = 'application/json'
-
+ 
         ind = Individual.fake()
         username = "".join(ind.names)
 
         res = Individual.create_ind_wrapper(genealogy, username, ind, headers)
         assert res.status_code == 201
 
-        created_id = str(res.json()['id'])
+        created_id = str(res.json()['new_ind_id'])
 
-        relative = Individual.fake(relative=created_id, role='parent')
+        relatives = Relative.fake([created_id], ['parent'])
+        relative = Individual.fake(relatives=relatives)
         res = Individual.create_ind_wrapper(genealogy, username, relative, headers)
+
         assert res.status_code == 201
 
     def test_created_inds_ids_are_present_in_tree(self, wait_for_genealogy, auth):
@@ -82,12 +96,13 @@ class TestIndividualInFamily:
         res = Individual.create_ind_wrapper(genealogy, username, ind, headers)
         assert res.status_code == 201
 
-        first_created_id = str(res.json()['id'])
+        first_created_id = str(res.json()['new_ind_id'])
 
-        relative = Individual.fake(relative=first_created_id, role='parent')
+        relatives = Relative.fake(relatives=[first_created_id], roles=['parent'])
+        relative = Individual.fake(relatives)
         res = Individual.create_ind_wrapper(genealogy, username, relative, headers)
         assert res.status_code == 201
-        second_created_id = str(res.json()['id'])
+        second_created_id = str(res.json()['new_ind_id'])
 
         ids = {first_created_id, second_created_id}
 
@@ -114,9 +129,10 @@ class TestIndividualInFamily:
         res = Individual.create_ind_wrapper(genealogy, username, ind, headers)
         assert res.status_code == 201
 
-        first_created_id = str(res.json()['id'])
+        first_created_id = str(res.json()['new_ind_id'])
 
-        relative = Individual.fake(relative=first_created_id, role='parent')
+        relatives = Relative.fake(relatives=[first_created_id], roles=['parent'])
+        relative = Individual.fake(relatives)
         res = Individual.create_ind_wrapper(genealogy, username, relative, headers)
         assert res.status_code == 201
 
@@ -191,7 +207,7 @@ class TestIndividualInFamily:
 
         res = Individual.create_ind_wrapper(genealogy, username, ind, headers)
         assert res.status_code == 201
-        id = str(res.json()['id'])
+        id = str(res.json()['new_ind_id'])
 
         res = genealogy['session'].delete(
             f'{genealogy["api_url"]}/individuals/{id}',
@@ -210,12 +226,13 @@ class TestIndividualInFamily:
 
         res = Individual.create_ind_wrapper(genealogy, username, ind, headers)
         assert res.status_code == 201
-        first_created_id = str(res.json()['id'])
+        first_created_id = str(res.json()['new_ind_id'])
 
-        relative = Individual.fake(relative=first_created_id, role='parent')
+        relatives = Relative.fake(relatives=[first_created_id], roles=['parent'])
+        relative = Individual.fake(relatives)
         res = Individual.create_ind_wrapper(genealogy, username, relative, headers)
         assert res.status_code == 201
-        second_created_id = str(res.json()['id'])
+        second_created_id = str(res.json()['new_ind_id'])
 
 
         res = genealogy['session'].delete(
