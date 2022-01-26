@@ -12,6 +12,7 @@ interface Props {
   options: string[];
   register?: UseFormRegisterReturn;
   name?: string;
+  title?: string;
 }
 
 const Select: FunctionComponent<Props> = ({
@@ -19,10 +20,11 @@ const Select: FunctionComponent<Props> = ({
   register,
   name,
   theme = "light",
+  title,
 }) => {
   return (
     <SelectWrapper>
-      <SelectElement id={name} {...register}>
+      <SelectElement id={name} title={title} {...register}>
         {options.map((o) => (
           <SelectOption key={o} value={o.toLocaleLowerCase()}>
             {o}

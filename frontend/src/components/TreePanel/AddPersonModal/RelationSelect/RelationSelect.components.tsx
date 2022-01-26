@@ -1,16 +1,37 @@
 import styled from "styled-components";
-import { columnDiv } from "styles/mixins";
+import { centeredDiv, columnDiv, spaceBetweenDiv } from "styles/mixins";
+import { SelectWrapper } from "components/shared/Select/Select.components";
 
 export const RelationSelectWrapper = styled.div`
   ${columnDiv}
-  align-items: flex-start;
 
   width: 100%;
 `;
 
-export const RelationDescription = styled.div`
-  color: ${({ theme }) => theme.colors.text.light};
-  font-size: ${({ theme }) => theme.fonts.sizes.base};
+export const RelationSelectRow = styled.div`
+  ${spaceBetweenDiv}
 
-  margin: 9px 0 30px;
+  width:100%;
+
+  margin: 20px 0;
+
+  ${SelectWrapper} {
+    width: 150px;
+  }
+
+  select {
+    font-size: ${({ theme }) => theme.fonts.sizes.s};
+  }
+`;
+
+export const RelationSelectIsTile = styled.div`
+  ${centeredDiv}
+
+  height:32px;
+  width: 32px;
+
+  border-radius: 10px;
+
+  background-color: ${({ theme }) => theme.colors.input.underlineColor};
+  color: ${({ theme }) => theme.colors.text.light};
 `;

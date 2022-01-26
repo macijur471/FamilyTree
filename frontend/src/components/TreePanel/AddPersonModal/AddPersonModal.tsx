@@ -38,25 +38,17 @@ import { useTreeContext } from "context/TreeContext/useTreeContext";
 import { useUserContext } from "context/UserContext/useUserContext";
 import { relationToStr } from "utils/functions/relationToStr";
 import { roleToStr } from "utils/functions/roleToStr";
+import { toast } from "react-toastify";
+import { handleErrorMssg } from "utils/functions/handleErrorMssg";
+import { ADD_PERSON_ERROR_TOASTID } from "utils/toast.ids";
 
 interface Props {
   close?: () => void | Promise<void>;
   sourcePerson?: { fullName: string; dateOfBirth: string; id: string };
 }
 
-const relOptions = [
-  "Parent",
-  "Child",
-  "Sibling",
-  "Adopted parent",
-  "Adopted child",
-  "Adopted sibling",
-  "Spouse",
-  "Divorced",
-];
-
 const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
-  const { getTree } = useTreeContext();
+  const { peopleData, getTree } = useTreeContext();
   const { username } = useUserContext();
 
   const {
@@ -66,15 +58,34 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
     setError,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({ defaultValues: { hobbies: [{ name: "" }] } });
+  } = useForm<Inputs>({
+    defaultValues: {
+      hobbies: [{ name: "" }],
+      relations: [
+        {
+          relation: "parent",
+          name: sourcePerson?.fullName.toLocaleLowerCase(),
+        },
+      ],
+    },
+  });
 
-  const watchBirthDate = watch("dateOfBirth", "");
   const watchImages = watch("images", undefined);
+  const watchRelations = watch("relations");
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "hobbies",
   });
+
+  const r = useFieldArray({
+    control,
+    name: "relations",
+  });
+
+  const relFields = r.fields;
+  const relAppend = r.append;
+  const relRemove = r.remove;
 
   const hobbiesErrors =
     errors.hobbies !== undefined
@@ -101,6 +112,18 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
       return;
     }
 
+    //check if some person is not twice
+    let isTwice = false;
+    watchRelations?.forEach((person, index) => {
+      watchRelations?.forEach((p, i) => {
+        if (person.name === p.name && index !== i) isTwice = true;
+      });
+    });
+    if (isTwice) {
+      toast.error("You can only have one relationship with one person!");
+      return;
+    }
+
     let person: { [k: string]: any } = {
       names: data.fullName,
       date_of_birth: data.dateOfBirth,
@@ -115,11 +138,15 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
     if (data.dateOfDeath) person.job = data.job;
 
     //if it's not the tree first person
-    if (data.relation) {
-      person.relative = sourcePerson?.id;
-      person.relation = relationToStr(data.relation);
-      person.role = roleToStr(data.relation);
-    }
+    if (sourcePerson && data.relations) {
+      person.relatives = data.relations.map((r) => ({
+        relative:
+          peopleData.find((p) => p.fullName.toLocaleLowerCase() === r.name)
+            ?.userId ?? "",
+        relation: relationToStr(r.relation),
+        role: roleToStr(r.relation),
+      }));
+    } else person.relatives = [];
 
     try {
       const res = await axios.post(`${PERSON_URL}/${username}`, person);
@@ -130,6 +157,8 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
       }
     } catch (e) {
       if (!(e instanceof Error) || !e) return;
+
+      handleErrorMssg(e, ADD_PERSON_ERROR_TOASTID);
     }
   };
 
@@ -219,37 +248,12 @@ const AddPersonModal: FunctionComponent<Props> = ({ close, sourcePerson }) => {
         />
         {sourcePerson && (
           <RelationSelect
-            options={relOptions}
             name={sourcePerson.fullName}
-            errorMssg={errors.relation?.message}
-            register={register("relation", {
-              validate: (relation) => {
-                switch (relation) {
-                  case "parent":
-                  case "adopted parent": {
-                    if (
-                      Date.parse(sourcePerson.dateOfBirth) <=
-                        Date.parse(watchBirthDate) ||
-                      watchBirthDate === ""
-                    )
-                      return `This person cannot be ${sourcePerson.fullName}'s parent!`;
-                    return true;
-                  }
-                  case "child":
-                  case "adopted child": {
-                    if (
-                      Date.parse(sourcePerson.dateOfBirth) >=
-                        Date.parse(watchBirthDate) ||
-                      watchBirthDate === ""
-                    )
-                      return `This person cannot be ${sourcePerson.fullName}'s child!`;
-                    return true;
-                  }
-                  default:
-                    return true;
-                }
-              },
-            })}
+            register={register}
+            fields={relFields}
+            append={relAppend}
+            remove={relRemove}
+            current={watchRelations}
           />
         )}
         <ImagesInput register={register("images")} images={watchImages} />

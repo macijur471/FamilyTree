@@ -17,6 +17,7 @@ export const InputLabel = styled.label`
   font-size: ${({ theme }) => theme.fonts.sizes.xl};
   font-family: ${({ theme }) => theme.fonts.families.fancy};
   color: ${({ theme }) => theme.colors.text.dark};
+  align-self: flex-start;
 
   cursor: pointer;
 `;

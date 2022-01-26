@@ -7,7 +7,7 @@ export type AddPersonInputs = {
   dateOfDeath: string;
   job?: string;
   hobbies: { name: string }[];
-  relation?: relOptionsT;
+  relations?: { relation: relOptionsT; name: string }[];
   images?: FileList;
   gender: "male" | "female";
 };
