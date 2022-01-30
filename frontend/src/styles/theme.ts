@@ -58,6 +58,11 @@ const theme = {
         female: "var(--red)",
         default: "var(--light-blue)",
       },
+      bgDark: {
+        male: "var(--dark-turqoise)",
+        female: "var(--dark-red)",
+        default: "var(--med-blue)",
+      },
     },
     personTile: {
       bg: {
