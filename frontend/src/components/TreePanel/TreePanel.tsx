@@ -34,6 +34,11 @@ const TreePanel: FunctionComponent = () => {
                     name={person.fullName}
                     birthDate={person.dateOfBirth}
                     imgUrl={person.imgUrl}
+                    hometown={person.hometown}
+                    hobbies={person.hobbies}
+                    job={person.job}
+                    images={person.images}
+                    deathDate={person.dateOfDeath}
                     key={node.id}
                     id={node.id}
                     gender={node.gender}

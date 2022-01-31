@@ -4,34 +4,34 @@ import {
     InfoLine,
     LeftPrinter,
     RightPrinter,
+    HobbiesListWrapper,
+    HobbiesListItemize,
  } from "./InfoView.components";
 
 interface Props {
     person?: {
-      //  hometown: string,
-      //  position:string,
-      //  hobbies: string,
-      //  job: string,
+       hometown: string,
+       hobbies: string | {name:string}[],
+       job?: string,
       }
+    gender?: "male"|"female"|"default",
 }
 
-const InfoView: FunctionComponent<Props> = ({ person,}) => {
+const InfoView: FunctionComponent<Props> = ({ person, gender="default"}) => {
   return (
-    <InfoViewWrapper>
+    <InfoViewWrapper bg={gender}>
         <InfoLine>
           <LeftPrinter>Hometown:</LeftPrinter>
-          {/* <RightPrinter>{hometown}</RightPrinter> */}
+          <RightPrinter>{person?.hometown}</RightPrinter>
         </InfoLine>
         <InfoLine>
           <LeftPrinter>Job:</LeftPrinter>
-          {/* <RightPrinter>{job}</RightPrinter> */}
+          { person?.job !== undefined ? <RightPrinter>{person?.job}</RightPrinter> : <RightPrinter>-</RightPrinter>}
         </InfoLine>
-        <InfoLine>
-          <LeftPrinter>Position:</LeftPrinter>
-          {/* <RightPrinter>{position}</RightPrinter> */}
-        </InfoLine>
-        <LeftPrinter>Hobbies:</LeftPrinter>
-        {/* <ListPrinter>{hobbies}</ListPrinter> */}
+        <HobbiesListWrapper>
+          <LeftPrinter>Hobbies:</LeftPrinter>
+          <HobbiesListItemize>{person?.hobbies}</HobbiesListItemize>
+        </HobbiesListWrapper>
     </InfoViewWrapper>
   );
 };

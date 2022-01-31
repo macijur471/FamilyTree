@@ -7,6 +7,11 @@ export const findPerson = (arr: peopleDataT[], userId: string) => {
       dateOfBirth: "20.12.2021",
       userId: "error-id",
       imgUrl: "",
+      dateOfDeath: "20.12.2021",
+      job: "",
+      hobbies: "Eror",
+      images: "",
+      hometown: "Error",
     }
   );
 };

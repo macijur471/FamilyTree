@@ -18,19 +18,25 @@ interface Props {
     sourcePerson?: {
       fullName: string,
       dateOfBirth: string,
-      // dateOfDeath: string,
-      id: string,
+      deathDate?: string,
       gender?: "male"|"female"|"default",
-      // hometown: string,
-      // position:string,
-      // hobbies: string,
-      // job: string,
-      imgUrl?: string,
+      hometown: string,
+      job?: string,
+      hobbies: string | { name: string }[],
+      //images?: FileList,
     }
     close?:() => void | Promise<void>;
   }
 const ViewPersonModal: FunctionComponent<Props> = ({close, sourcePerson}) => {
-  
+  // const imgs = [];
+  // if (sourcePerson?.images) {
+  //   for (let i = 0; i < sourcePerson?.images.length; i++) {
+  //     const item = sourcePerson?.images.item(i);
+  //     if (!item) continue;
+
+  //     imgs.push(URL.createObjectURL(item));
+  //   }
+  // }  
 
   return (
     <Modal close={close} column bgColor={sourcePerson?.gender}>
@@ -40,11 +46,11 @@ const ViewPersonModal: FunctionComponent<Props> = ({close, sourcePerson}) => {
       </PersonInfoModalHeaderWrapper>
       <PersonDatesWrapper>
         <DateView title="Date of birth" date={sourcePerson?.dateOfBirth} gender={sourcePerson?.gender}/>
-        {/* <DateView title="Date of death" date={sourcePerson?.dateOfDeath} gender={sourcePerson?.gender}/> */}
+        {sourcePerson?.deathDate !== undefined && <DateView title="Date of death" date={sourcePerson?.deathDate} gender={sourcePerson?.gender}/>}
       </PersonDatesWrapper>
-      <InfoView /* person={sourcePerson} *//>
+      <InfoView person={sourcePerson} gender={sourcePerson?.gender}/>
 
-      {/* <ImagesList images={sourcePerson?.imgUrl}/> */}
+      {/* <ImagesList images={imgs}/> */}
 
     </Modal>
   );

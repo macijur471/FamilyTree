@@ -5,6 +5,7 @@ import { ThemeType } from "styles/theme";
 
 export const PersonInfoModalHeaderWrapper = styled(WrapperWithBgBar)`
   width: 100%;
+  margin-top: 30px;
 
   ${centeredDiv}
 `;
@@ -20,6 +21,7 @@ export const PersonInfoModalHeaderText = styled.span`
 
 export const PersonDatesWrapper = styled.div`
 width: 100%;
+margin-top: 30px;
 
 ${centeredDiv}
 `;

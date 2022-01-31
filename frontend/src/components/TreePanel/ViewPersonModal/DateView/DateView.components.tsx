@@ -7,19 +7,34 @@ export const DateViewWrapper = styled.div<{
 }>`
   ${columnDiv}
 
-  width: ${({ bg }) => (bg === "male" ? "280px" : "206px")};
-  height: ${({ bg }) => (bg === "male" ? "125px" : "191px")};
+  width:  200px;
+  height: 125px;
 
   background-color: ${({ bg, theme }) => theme.colors.modal.bgDark[bg]};
 
-  border-top-left-radius: 15px;
-
-  cursor: pointer;
+  border-radius: 15px 15px 15px 15px;
 
   position: relative;
   z-index: 1;
   overflow: hidden;
 
+  &::after {
+    content: "";
+    height: 150%;
+    width: 150%;
+
+    border-radius: 50%;
+
+    position: absolute;
+    z-index: -1;
+    top: -25%;
+    left: -25%;
+
+    transform: scale(0);
+    transition: transform 0.3s ease-out;
+  }
+
+  &:hover::after,
   &:focus::after {
     transform: scale(1);
   }
@@ -28,37 +43,28 @@ export const DateViewWrapper = styled.div<{
 export const DataViewHeaderText = styled.span`
   font-size: ${({ theme }) => theme.fonts.sizes.xl};
   font-family: ${({ theme }) => theme.fonts.families.fancy};
-  color: ${({ theme }) => theme.colors.text.dark};
+  color: ${({ theme }) => theme.colors.text.light};
 
-  position: relative;
+  margin-top: 15px;
+  position: realtive;
   z-index: 2;
 `;
 
-export const HeaderUnderline = styled.div<{ themeColor: "light" }>`
+export const HeaderUnderline = styled.div`
   width: 80%;
-  height: ${({ theme }) => theme.borders.thick};
+  height: ${({ theme }) => theme.borders.thin};
 
-  background-color: ${({ theme }) => theme.colors.input.underlineColor};
+  background-color: ${({ theme }) => theme.colors.text.light};
 
   position: relative;
-  bottom: 4px;
+  top: 5px;
 
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-
-  }
 `;
 
 export const DateText = styled.div`
-width: 423px;
+  font-size: ${({ theme }) => theme.fonts.sizes.l};
+  font-family: ${({ theme }) => theme.fonts.families.fancy};
+  color: ${({ theme }) => theme.colors.text.light};
 
-margin-top: 30px;
-
+  margin-top: 10px
 `;

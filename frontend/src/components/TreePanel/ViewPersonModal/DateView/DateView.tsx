@@ -15,7 +15,7 @@ interface Props {
 const DateView: FunctionComponent<Props> = ({ title, date, gender="default" }) => (
   <DateViewWrapper bg={gender}>
     <DataViewHeaderText>{title}</DataViewHeaderText>
-    <HeaderUnderline themeColor="light" />
+    <HeaderUnderline/>
     <DateText>{date}</DateText>
   </DateViewWrapper>
 );

@@ -24,36 +24,32 @@ interface Props {
   name: string;
   gender: "male" | "female";
   birthDate: string;
-  // deathDate?: string,
+  deathDate?: string,
   imgUrl?: string;
   id: string;
   node: any;
   style: object;
   onSubClick: Dispatch<SetStateAction<string>>;
-  /*
   hometown: string,
-  position: string,
-  hobbies: string,
-  job: string,
-  */
+  job?: string,
+  hobbies: string | {name: string}[];
+  images?: string | FileList;
 }
 
 const PersonTile: FunctionComponent<Props> = ({
   name,
   gender,
   birthDate,
-  // deathDate,
+  deathDate,
   imgUrl,
   node,
   style,
   onSubClick,
   id,
-  /*
   hometown,
-  position,
   hobbies,
   job,
-  */
+  images,
 }) => {
   const [, drag] = useDrag(() => ({
     type: "person",
@@ -99,17 +95,13 @@ const PersonTile: FunctionComponent<Props> = ({
           sourcePerson={{
             fullName: name,
             dateOfBirth: birthDate,
-            // dateOfDeath: deathDate,
-            id: id, gender: gender,
-            /*
+            deathDate: deathDate,
+            gender: gender,
             hometown: hometown,
-            position:position,
             hobbies: hobbies,
             job: job,
-            */
-            imgUrl: imgUrl,
+            // images:images,
             }}
-          // bg={gender}
         />
       )}
     </>
