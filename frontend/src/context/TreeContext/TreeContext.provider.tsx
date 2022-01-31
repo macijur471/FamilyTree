@@ -35,6 +35,11 @@ const TreeContextProvider: FunctionComponent = ({ children }) => {
           dateOfBirth: i.date_of_birth,
           userId: i.id,
           imgUrl: "",
+          hometown: i.hometown,
+          hobbies: i.hobbies,
+          job: i.job,
+          deathDate: i.date_of_death,
+          images: i.images,
         }));
         setPeopleData(pData);
         setRootId(res.data.rootId);

@@ -5,35 +5,61 @@ from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 
 pytest_plugins = ["docker_compose"]
+creds = {'username': 'tester', 'password': 'password'}
 
-
-@pytest.fixture(scope="class")
-def wait_for_apis(class_scoped_container_getter):
-    service = class_scoped_container_getter.get("haproxy").network_info[0]
+@pytest.fixture(scope="session")
+def wait_for_genealogy(session_scoped_container_getter):
+    service = session_scoped_container_getter.get("haproxy").network_info[0]
     api_url = f"http://{service.hostname}:{service.host_port}"
 
-    apis = ['/api/v1/genealogy', '/api/v1/auth/user']
+    api = '/api/v1/genealogy'
 
-    results = [wait_for_health_200(api_url, api) for api in apis]
-    auth_register(results[1])
+    return wait_for_health_200(api_url, api)
 
-    return results
+@pytest.fixture(scope="session")
+def wait_for_auth(session_scoped_container_getter):
+    service = session_scoped_container_getter.get("haproxy").network_info[0]
+    api_url = f"http://{service.hostname}:{service.host_port}"
+
+    api = '/api/v1/auth/user'
+
+    res =  wait_for_health_200(api_url, api)
+    auth_register(res)
+
+    return res 
+
+
+@pytest.fixture(scope="session")
+def auth(wait_for_auth, auth_user_creds):
+
+    headers = {'content-type': 'application/json'}
+    res = wait_for_auth['session'].post(
+        f'{wait_for_auth["api_url"]}/login', data=auth_user_creds, headers=headers)
+
+    assert res.status_code == 200
+
+    data = res.json()
+
+    return data['token']
 
 
 @pytest.fixture(scope="session")
 def auth_user_creds():
-    body = {'username': 'username', 'password': 'password'}
+    return json.dumps(creds)
 
-    return json.dumps(body)
+
+def create_auth_header(token):
+    return {'Authorization': f'Bearer {token}'}
 
 
 def auth_register(auth):
-    body = {'username': 'username', 'password': 'password'}
+    body = json.dumps(creds)
     headers = {'content-type': 'application/json'}
     res = auth['session'].post(
-        f'{auth["api_url"]}/register', data=json.dumps(body), headers=headers)
+        f'{auth["api_url"]}/register', data=body, headers=headers)
 
     assert res.status_code == 200
+    return res.json()['token']
 
 
 def wait_for_health_200(api_url, path):
